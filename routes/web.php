@@ -41,6 +41,8 @@ Route::get('/dashboard/livescoring', 'LiveScoringController@index')->name('lives
 
 Route::get('/dashboard/ranking', 'RankingController@index')->name('ranking');
 
+Route::get('/dashboard/ranking/results', 'RankingController@index')->name('ranking.form'); 
+
 Route::post('/dashboard/ranking/results', 'RankingController@show')->name('ranking.show'); 
 
 Route::post('/dashboard/ranking/export', 'RankingController@export')->name('ranking.export');
