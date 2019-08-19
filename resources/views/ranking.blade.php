@@ -68,7 +68,13 @@
 
                 <div class="card mt-2">
                     <div class="card-header text-center">
-                        <h1>Ranking for {{ $cat }}</h1>
+                        <h1>
+                            @if ( $cat == 'All' )
+                                Showing All Entries
+                            @else
+                                Ranking for {{ $cat }}
+                            @endif
+                        </h1>
                     </div>
                     <div class="card-body">
                         <table id="rankings" class="table text-center">
@@ -86,9 +92,27 @@
                                 
                                 <tr>
                                     <th scope="row">{{ $entry->code }}</th>
-                                    <td>{{ $entry->judge_a }}</td>
-                                    <td>{{ $entry->judge_b }}</td>
-                                    <td>{{ $entry->judge_c }}</td>
+                                    <td>
+                                        @if ( $entry->judge_a )
+                                            {{ $entry->judge_a }}
+                                        @else 
+                                            No Score
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ( $entry->judge_b )
+                                            {{ $entry->judge_b }}
+                                        @else 
+                                            No Score
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ( $entry->judge_c )
+                                            {{ $entry->judge_c }}
+                                        @else 
+                                            No Score
+                                        @endif
+                                    </td>
                                     <td>{{ $average }}</td>
                                 </tr>
 

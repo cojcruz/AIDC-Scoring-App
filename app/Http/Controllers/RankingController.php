@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RankingController extends Controller
 {
@@ -68,5 +69,14 @@ class RankingController extends Controller
 
 
         return view('ranking', $data);
+    }
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function export(Request $request)
+    {
+        return Excel::download(new EntriesExport, 'entries.xlsx');   
     }
 }

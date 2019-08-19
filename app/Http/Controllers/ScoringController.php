@@ -24,18 +24,34 @@ class ScoringController extends Controller
     public function index()
     {
         //Check for active entry
-        $entry = DB::table('active_entry')
+        $activeentry = DB::table('active_entry')
             ->select('*')
             ->where('id', 1)->first();
-        $code = $entry->code;
+        $code = $activeentry->code;
 
         $userid = Auth::user()->id;
-        $check = DB::table('scores')
+        $entrycode = null;
+        $category = null;
+        $judge = null;
+        $score = NULL;
+
+        switch ($userid) {
+            case 2:
+                $judge = 'judge_a';
+            break;
+            case 3:
+                $judge = 'judge_b';
+            break;
+            case 4:
+                $judge = 'judge_c';
+            break;
+        }
+
+        $checkscore = DB::table('entries')
             ->select('*')
             ->where('code', $code)
-            ->where('judge_id', $userid)->first();        
-        $entry = '';
-        $category = '';
+            ->where($judge, '!=', NULL)->first();
+
         // Get Entry Details
         if ( $code != NULL ):
             $entry = DB::table('entries')
@@ -45,15 +61,29 @@ class ScoringController extends Controller
             $category = DB::table('categories')
                 ->select('*')
                 ->where('code', $entry->category)->first();
+
+            switch ($userid) {
+                case 2:
+                    $score = $entry->judge_a;
+                break;
+                case 3:
+                    $score = $entry->judge_b;
+                break;
+                case 4:
+                    $score = $entry->judge_c;
+                break;
+            }
         endif;
-        
-        $status = $entry != NULL ? 'active' : 'standby';
+
+        $status = !$activeentry->code ? 'standby' : 'active';
+        $catcode = !$category ? 'NoActive' : $category->code;
 
         $data = [
             'status' => $status,
-            'entrycode' => $entry,
-            'check' => $check,
-            'category' => $category,
+            'entrycode' => $activeentry,
+            'check' => $checkscore,
+            'catcode' => $catcode,
+            'score' => $score,
         ];
 
         return view('scoring', $data);
@@ -74,9 +104,24 @@ class ScoringController extends Controller
         $scores = new Scores();
 
         // Check Existing Score
-        $check = DB::select('select * from scores where code = '. $code . ' and judge_id = ' . $judge );
+        $judge = null;
 
-        if ( !$check ):
+        switch (Auth::user()->id) {
+            case 2:
+                $judge = 'judge_a';
+            break;
+            case 3:
+                $judge = 'judge_b';
+            break;
+            case 4:
+                $judge = 'judge_c';
+            break;
+        }
+        $checkscore = DB::table('entries')
+            ->select('*')
+            ->where($judge, '!=', NULL)->first();
+
+        if ( !$checkscore ):
             $scores->code = $code;
             $scores->score = $score;
             $scores->judge_id = $judge;
