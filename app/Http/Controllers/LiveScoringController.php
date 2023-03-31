@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Log;
 
 class LiveScoringController extends Controller
 {
@@ -37,6 +38,7 @@ class LiveScoringController extends Controller
 
         // Get Entry Details
         if ( $code != NULL ):
+
             $entry = DB::table('entries')
                 ->select('*')
                 ->where('code', $code)->first();
@@ -54,6 +56,7 @@ class LiveScoringController extends Controller
             $judge_a = $entry->judge_a;
             $judge_b = $entry->judge_b;
             $judge_c = $entry->judge_c;
+
         endif;
         
         // Set Live Page Layout

@@ -4,110 +4,175 @@
     <script src="{{ asset('js/judgescoring_app.js') }}"></script>
 
     @if ( $status == 'active' ) 
-    
+    <style>
+        #app, #app main {
+            height: 100vh !important;
+        }
+        #app main {
+            display: flex;
+        }
+        #app main > .row {
+            align-items: center;
+        }
+    </style>
+    <script src="{{ asset('js/jquery.stopwatch.js') }}"></script>
     <script>
         jQuery( function($) {
-            var entry;
+            $(document).ready(function() {
+                @if ( !$check )
+                $('#stopwatch').stopwatch().stopwatch('start');
 
-            $('.numpad').click( function() {
-                var value = $(this).data('value');
-                
-                entry = $('#Entry').val();
+                // Voice Recorder Init
+                const handleSuccess = function(stream) {
+                    const options = {mimeType: 'audio/webm;codecs=opus'};
+                    const recordedChunks = [];
+                    const mediaRecorder = new MediaRecorder(stream);
 
-                if ( value == 'CLR' ) {
-                    entry = entry.substring(0, entry.length -1);
-                    $('#Entry').val( entry );
-                } else {
-                    entry = entry + value;
-                    $('#Entry').val( entry );
-                    $('#score').val( entry );
-                }
-            });
+                    mediaRecorder.addEventListener('dataavailable', function(e) {
+                        if (e.data.size > 0) recordedChunks.push(e.data);
+                    });
 
-            $('#submit').click( function() {
-                $('#myModal').modal();
-                $('#score').val( entry );
-            });
+                    mediaRecorder.addEventListener('stop', function() {
+                        var fd = new FormData();
+                        var audio = new Blob(recordedChunks); 
+                        var oReq = new XMLHttpRequest();
 
-            $('#savescore').click( function() {
-                $('#submitModalForm').submit();
+                        fd.append('_token', '{{ csrf_token() }}');
+                        fd.append('file', audio);
+                        fd.append('entryCode', '{{ $entrycode->code }}');
+                        fd.append('catCode', '{{ $catcode }}');
+                        fd.append('judge', '{{ Auth::user()->id }}');
+
+                        oReq.open('POST', '{{ route('upload.recording') }}', true);
+                        oReq.onload = function( oEvent ) {
+                            //
+                        }
+
+                        oReq.send(fd);
+                    });
+
+                    mediaRecorder.start();
+
+                    // Scoring Input Init    
+                    var entry;
+
+                    $('.numpad').click( function() {
+                        var value = $(this).data('value');
+                        
+                        entry = $('#Entry').val();
+
+                        if ( value == 'CLR' ) {
+                            entry = entry.substring(0, entry.length -1);
+                            $('#Entry').val( entry );
+                        } else {
+                            entry = entry + value;
+                            $('#Entry').val( entry );
+                            $('#score').val( entry );
+                        }
+                    });
+
+                    $('#submit').click( function() {
+                        if ( $('#Entry').val() ) {
+                            $('#myModal').modal();
+                            $('#score').val( entry );
+                        } else {
+                            alert('Please enter scrore.')
+                        }
+                    });
+
+                    $('#savescore').click( function() {
+                        mediaRecorder.stop();
+                        $('#stopwatch').stopwatch().stopwatch('stop');
+                        $('#submitModalForm').submit();
+                    });
+
+                };
+                // Init Mic Recording
+                navigator.mediaDevices.getUserMedia({ 
+                        audio: true, 
+                        video: false 
+                    })
+                    .then(handleSuccess);
+                @endif
             });
         });
     </script>
 
     @else 
+
     <script>
         setInterval(function() {
             window.location.reload();
-        }, 5000);
+        }, 2000);
     </script>
 
     @endif
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title text-center">
-                        @if ( $status == 'standby' ) 
-                            Live Scoring
-                        @else
-                            <span class="d-block mx-auto text-primary">Category: <span class="text-secondary">{{ $catcode }}</span></span>
-                            Entry <span style="font-size: 50%;" class="d-inline-block">#</span>{{ $entrycode->code }}                            
-                        @endif
-                    </h5>
-                </div>
-                <div class="card-body">
-                    @if ( $status == 'standby' )
-
-                    <h2 class="text-center">
-                        @if ( $check )
-                            Entry <span style="font-size: 50%;">#</span>{{ $check->code }}<br>
-                            Score {{ $check->score }}
-                        @else 
-                            Waiting for data...
-                        @endif
-                    </h2>
-                    
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title text-center">
+                    @if ( $status == 'standby' ) 
+                        Live Scoring
                     @else
-                        @if ( !$check )
-                            <div class="row justify-content-center">
-                                <div class="col-md-8">
-                                    <form method="post" id="entryscore">
-                                        <input type="text" maxlength="5" id="Entry" class="input" readonly />
-                                    </form>
-                                    </div>
-                                </div>
-                        	</div>
-                            <div class="numpad_wrapper">
-                                <button class="btn btn-light numpad" data-value='1'>1</button>
-                                <button class="btn btn-light numpad" data-value='2'>2</button>
-                                <button class="btn btn-light numpad" data-value='3'>3</button>
-                                <button class="btn btn-light numpad" data-value='4'>4</button>
-                                <button class="btn btn-light numpad" data-value='5'>5</button>
-                                <button class="btn btn-light numpad" data-value='6'>6</button>
-                                <button class="btn btn-light numpad" data-value='7'>7</button>
-                                <button class="btn btn-light numpad" data-value='8'>8</button>
-                                <button class="btn btn-light numpad" data-value='9'>9</button>
-                                <button class="btn btn-light numpad" data-value='.'>.</button>
-                                <button class="btn btn-light numpad" data-value='0'>0</button>
-                                <button class="btn btn-light numpad" data-value='CLR'><i class="material-icons">backspace</i></button>
-                            </div>
-                            <div class="submit_wrapper">
-                                <button id="submit" class="submit btn btn-primary">Submit</button>
-                            </div>
-                        @else 
-                            <h2 class="text-center">
-                                Entry <span style="font-size: 50%;">#</span>{{ $check->code }}<br>
-                                Score {{ $score }}
-                            </h2>
-                        @endif
-
+                        <span class="d-block mx-auto text-primary">Category: <span class="text-secondary">{{ $catcode }}</span></span>
+                        Entry <span style="font-size: 50%;" class="d-inline-block">#</span>{{ $entrycode->code }}                            
                     @endif
-                </div>
+                </h5>
+            </div>
+            <div class="card-body">
+                @if ( $status == 'standby' )
+
+                <h2 class="text-center">
+                    @if ( $check )
+                        Entry <span style="font-size: 50%;">#</span>{{ $check->code }}<br>
+                        Score {{ $check->score }}
+                    @else 
+                        Waiting for Active Contestant
+                    @endif
+                </h2>
+                
+                @else
+
+                    @if ( !$check )
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <form method="post" id="entryscore">
+                                    <input type="text" maxlength="5" id="Entry" class="input" readonly />
+                                </form>
+                                </div>
+                            </div>
+                    	</div>
+                        <div class="numpad_wrapper" style="display: flex; flex-wrap: wrap; justify-content: center;">
+                            <button class="btn btn-light numpad" data-value='1'>1</button>
+                            <button class="btn btn-light numpad" data-value='2'>2</button>
+                            <button class="btn btn-light numpad" data-value='3'>3</button>
+                            <button class="btn btn-light numpad" data-value='4'>4</button>
+                            <button class="btn btn-light numpad" data-value='5'>5</button>
+                            <button class="btn btn-light numpad" data-value='6'>6</button>
+                            <button class="btn btn-light numpad" data-value='7'>7</button>
+                            <button class="btn btn-light numpad" data-value='8'>8</button>
+                            <button class="btn btn-light numpad" data-value='9'>9</button>
+                            <button class="btn btn-light numpad" data-value='.'>.</button>
+                            <button class="btn btn-light numpad" data-value='0'>0</button>
+                            <button class="btn btn-light numpad" data-value='CLR'><i class="material-icons">backspace</i></button>
+                        </div>
+                        <div class="submit_wrapper px-2">
+                            <h3 class="display-5">Recording</h3>
+                            <div id="stopwatch">00:00:00</div>
+                            <button id="submit" class="submit btn btn-primary col-sm-12">Submit</button>
+                        </div>                        
+                    @else 
+                        <h2 class="text-center">
+                            Entry <span style="font-size: 50%;">#</span>{{ $check->code }}<br>
+                            Score {{ $score }}
+                        </h2>
+                    @endif
+
+                @endif
             </div>
         </div>
     </div>
@@ -129,17 +194,16 @@
 
         <form action="{{ route('savescore') }}" method="post" id="submitModalForm">
             @csrf
-
             <input type="hidden" name="code" value="{{ $entrycode->code }}">
             <input type="hidden" name="judge" value="{{ Auth::user()->id }}">
             <input type="hidden" name="category" value="{{ $catcode }}"> 
-            <input type="text" name="score" readonly id="score">
+            <input type="text" name="score" readonly id="score" class="confirmScore form-control">
         </form>
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" id="savescore" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Change Score</button>
+        <button type="button" id="savescore" class="btn btn-primary">Save Changes</button>
       </div>
     </div>
   </div>

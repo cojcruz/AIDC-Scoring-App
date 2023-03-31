@@ -41,6 +41,12 @@
         <div class="col-md-8 my-auto">
             <card title="Now Performing">
                 <h2 style="font-size: 100px;">Entry <span style="font-size: 50%;">#</span>{{ $code }}</h2>
+
+                <script>
+                    setInterval( function() {
+                        window.location.reload();
+                    }, 15000);
+                </script>
             </card>
         </div>
         @elseif ( $layout == 'showscores' )

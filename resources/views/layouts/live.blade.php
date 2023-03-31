@@ -22,11 +22,6 @@
 </head>
 <body>
     <div id="app">
-        <nav class="header">
-            <div class="container">
-            </div>
-        </nav>
-
         <main style="height: 100vh">
             @yield('content')
         </main>

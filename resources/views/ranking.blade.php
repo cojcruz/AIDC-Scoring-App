@@ -56,6 +56,7 @@
                                 @foreach ( $categories as $category )
                                     
                                     <option value="{{ $category->code }}" <?php echo ($cat == $category->code) ? 'selected' : ''; ?>>{{ $category->name }}</option>
+                                    
                                 @endforeach
                             </select>
 

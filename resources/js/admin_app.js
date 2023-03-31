@@ -17,7 +17,7 @@ Vue.component('activeform', require('./components/forms/activeform').default)
 Vue.component('card', require('./components/card').default);
 
 const router = new VueRouter();
-
+ 
 new Vue({
 	el: "#app",
 
@@ -49,7 +49,7 @@ new Vue({
 
 				window.location.reload();
 
-				alert('Entry Activated');
+				alert('Entry Activated!!'); 
 			})
 				.catch(function (err) {
 				obj.output = err;

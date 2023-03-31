@@ -14,6 +14,7 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .js('resources/js/admin_app.js', 'public/js')
+    .js('resources/js/categories_app.js', 'public/js')
     .js('resources/js/live_app.js', 'public/js')
     .js('resources/js/scoring_app.js','public/js')
     .js('resources/js/judgescoring_app.js','public/js');

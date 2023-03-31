@@ -1999,22 +1999,7 @@ pre code {
   box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25);
 }
 
-.form-control::-webkit-input-placeholder {
-  color: #6c757d;
-  opacity: 1;
-}
-
 .form-control::-moz-placeholder {
-  color: #6c757d;
-  opacity: 1;
-}
-
-.form-control:-ms-input-placeholder {
-  color: #6c757d;
-  opacity: 1;
-}
-
-.form-control::-ms-input-placeholder {
   color: #6c757d;
   opacity: 1;
 }
@@ -2522,7 +2507,6 @@ textarea.form-control.is-invalid {
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   background-color: transparent;
   border: 1px solid transparent;
@@ -5440,16 +5424,6 @@ a.badge-dark.focus {
   color: #040505;
 }
 
-@-webkit-keyframes progress-bar-stripes {
-  from {
-    background-position: 1rem 0;
-  }
-
-  to {
-    background-position: 0 0;
-  }
-}
-
 @keyframes progress-bar-stripes {
   from {
     background-position: 1rem 0;
@@ -5492,14 +5466,12 @@ a.badge-dark.focus {
 }
 
 .progress-bar-animated {
-  -webkit-animation: progress-bar-stripes 1s linear infinite;
-          animation: progress-bar-stripes 1s linear infinite;
+  animation: progress-bar-stripes 1s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .progress-bar-animated {
-    -webkit-animation: none;
-            animation: none;
+    animation: none;
   }
 }
 
@@ -6626,12 +6598,6 @@ a.close.disabled {
   text-align: center;
 }
 
-@-webkit-keyframes spinner-border {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes spinner-border {
   to {
     transform: rotate(360deg);
@@ -6646,24 +6612,13 @@ a.close.disabled {
   border: 0.25em solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
-  -webkit-animation: spinner-border 0.75s linear infinite;
-          animation: spinner-border 0.75s linear infinite;
+  animation: spinner-border 0.75s linear infinite;
 }
 
 .spinner-border-sm {
   width: 1rem;
   height: 1rem;
   border-width: 0.2em;
-}
-
-@-webkit-keyframes spinner-grow {
-  0% {
-    transform: scale(0);
-  }
-
-  50% {
-    opacity: 1;
-  }
 }
 
 @keyframes spinner-grow {
@@ -6684,8 +6639,7 @@ a.close.disabled {
   background-color: currentColor;
   border-radius: 50%;
   opacity: 0;
-  -webkit-animation: spinner-grow 0.75s linear infinite;
-          animation: spinner-grow 0.75s linear infinite;
+  animation: spinner-grow 0.75s linear infinite;
 }
 
 .spinner-grow-sm {
@@ -7989,7 +7943,6 @@ button.bg-dark:focus {
 }
 
 .position-sticky {
-  position: -webkit-sticky !important;
   position: sticky !important;
 }
 
@@ -8009,9 +7962,8 @@ button.bg-dark:focus {
   z-index: 1030;
 }
 
-@supports ((position: -webkit-sticky) or (position: sticky)) {
+@supports (position: sticky) {
   .sticky-top {
-    position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 1020;
@@ -10670,35 +10622,6 @@ body:before {
   background-size: contain;
 }
 
-body .numpad_wrapper,
-body .submit_wrapper {
-  text-align: center;
-  width: 80%;
-  margin: 2em auto;
-}
-
-body .numpad_wrapper .numpad {
-  width: calc((100% / 3) - 5px);
-  display: inline-block;
-  padding: 10px 5px;
-  margin: 2px 1px;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 24px;
-  outline: none;
-  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.25);
-}
-
-body .submit_wrapper .submit {
-  display: block;
-  width: 100%;
-  font-size: 24px;
-  font-weight: bold;
-  padding: 10px 0;
-  outline: none;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
-}
-
 body #Entry,
 body #score,
 body .entry {
@@ -10716,19 +10639,136 @@ body .entry {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
 }
 
-body .entry {
+body #app {
+  overflow: hidden;
+}
+
+body #app nav {
+  height: 80px;
+  max-height: 80px;
+  padding: 10px 18px;
+  margin: 0;
+  background-color: #454d55 !important;
+  border-bottom: 1px solid #ccc;
+  color: #ccc;
+}
+
+body #app nav a {
+  color: #ccc;
+}
+
+body #app main {
+  height: calc(100vh - 80px);
+  margin: 0;
+  padding: 0 !important;
+}
+
+body #app main > .row {
+  width: 100%;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+body #app main > .row #sidebar {
+  flex: 1;
+  background-color: #454d55 !important;
+  max-width: 300px;
+  padding: 0;
+}
+
+body #app main > .row #sidebar .nav-item a {
+  color: #ccc;
+}
+
+body #app main > .row #sidebar .nav-item a:hover {
+  color: #000;
+}
+
+body #app main > .row #sidebar .nav-item a i {
+  vertical-align: bottom;
+}
+
+body #app main > .row #main {
+  flex: 1;
+  padding: 1.5em 1em !important;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+body #app main > .row #main .dataTables_length,
+body #app main > .row #main .dataTables_filter,
+body #app main > .row #main .dataTables_info,
+body #app main > .row #main .dataTables_paginate {
+  display: inline-block;
+  width: 50%;
+  margin-top: 10px;
+}
+
+body #app main > .row #main .dataTables_filter,
+body #app main > .row #main .dataTables_paginate {
+  text-align: right;
+}
+
+body #app main > .row #main .dataTables_filter .paginate_button,
+body #app main > .row #main .dataTables_paginate .paginate_button {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+body #app main > .row #stopwatch {
+  font-size: 40px;
+}
+
+body #app main > .row .numpad_wrapper,
+body #app main > .row .submit_wrapper {
+  text-align: center;
+  width: 100%;
+  margin: 2em auto;
+}
+
+body #app main > .row .numpad_wrapper .numpad,
+body #app main > .row .submit_wrapper .numpad {
+  width: calc((100% / 3) - 12px);
+  display: inline-block;
+  padding: 15px 5px;
+  margin: 0.25em;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 24px;
+  outline: none;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.25);
+}
+
+body #app main > .row .numpad_wrapper .submit,
+body #app main > .row .submit_wrapper .submit {
+  display: block;
+  width: 100%;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 10px 0;
+  outline: none;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+body #app main > .row .confirmScore {
+  font-size: 24px;
+  text-align: center;
+}
+
+body #app main > .row .entry {
   display: block;
   font-size: 24px;
   line-height: 24px;
 }
 
-body .card {
+body #app main > .row .card {
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.5);
   min-height: 200px;
   margin-bottom: 1.5em;
 }
 
-body .score {
+body #app main > .row .score {
   font-size: 100px;
   font-weight: bold;
   border: 1px solid #ddd;
@@ -10737,7 +10777,7 @@ body .score {
   padding: 20px 0;
 }
 
-body .paginate_button {
+body #app main > .row .paginate_button {
   display: inline-block;
   padding: 2px;
 }

@@ -1,8 +1,13 @@
 @extends('layouts.scoring')
 
 @section('appScript')
-    <script src="{{ asset('js/judgescoring_app.js') }}"></script>
 
+    <script src="{{ asset('js/judgescoring_app.js') }}"></script>
+    <script>
+        setInterval( function() {
+                        history.back();
+                    }, 10000);
+    </script>
     
 @endsection
 

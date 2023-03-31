@@ -5,22 +5,17 @@
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            @if (session('status'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('status') }}
-                </div>
-            @endif
-        </div>
-    </div> 
-    @if ( !Auth::user()->admin )
-    <div class="row justify-content-center">       
-        <div class="col-md-12">
-            <card title="You are not authorized to view this content"></card>
-        </div>
+
+    @if (session('status'))
+    <div class="status">
+        <div class="alert alert-success" role="alert">
+            {{ session('status') }}
+        </div>            
     </div>
+    @endif
+
+    @if ( !Auth::user()->admin )
+    <card title="You are not authorized to view this content"></card>            
     @else
     <div class="row justify-content-center">
         <div class="col-md-4">
@@ -71,7 +66,5 @@
             </card>
         </div>
     </div>
-
     @endif
-</div>
 @endsection

@@ -14,7 +14,7 @@ class CreateActiveEntryTable extends Migration
     public function up()
     {
         Schema::create('active_entry', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('code')->nullable();
             $table->timestamps();
         });

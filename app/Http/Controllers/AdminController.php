@@ -69,10 +69,28 @@ class AdminController extends Controller
      */
     public function activateEntry(Request $request)
     {
-		$data = DB::update('update active_entry set code = :code where id = 1', ['code' => $request->input('code')]);
-		Log::info( $data );
+        $data = DB::table('active_entry')
+            ->update(['code' => $request->input('code')])
+            ->where('id', 1 );
 
-        return $data == 1 ? "success" : "fail";
+        Log::info($data);
+
+        //return $data == 1 ? "success" : "fail";
+        return redirect()->back()->with('status', "Entry " . $request->input('code') . ' Activated!');
+    }
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function setEntry(string $id)
+    {
+        // Set active entry in active_entry table
+        DB::table('active_entry')
+            ->where('id', '1')
+            ->update(['code' => $id]);
+
+        return redirect()->back()->with('status', "Entry " . $id . ' Activated!');
     }
 
     /**
@@ -82,8 +100,7 @@ class AdminController extends Controller
      */
     public function activateCategory(Request $request)
     {
-        $data = DB::update('update active_category set code = :code where id = 1', ['code' => $request->input('code')]);
-        Log::info( $data );
+        DB::update('update active_category set code = :code where id = 1', ['code' => $request->input('code')]);
 
         return $data == 1 ? "success" : "fail";
     }
@@ -99,6 +116,21 @@ class AdminController extends Controller
 		Log::info( $data );
 
         return $data == 1 ? "success" : "fail";
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function deactivateEntry(string $id)
+    {
+        // Remove existing active entry in active_entry table
+        DB::table('active_entry')
+            ->where('id', '1')
+            ->update(['code' => NULL]);
+
+        return redirect()->back()->with('status', 'Entry #' . $id . ' Deactivated.');
     }
 
     

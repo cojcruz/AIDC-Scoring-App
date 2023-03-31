@@ -14,7 +14,7 @@ class CreateActiveCategoryTable extends Migration
     public function up()
     {
         Schema::create('active_category', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('code')->nullable();
             $table->timestamps();
         });

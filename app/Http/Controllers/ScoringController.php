@@ -58,9 +58,7 @@ class ScoringController extends Controller
                 ->select('*')
                 ->where('code', $code)->first();                
             // Get Category Details
-            $category = DB::table('categories')
-                ->select('*')
-                ->where('code', $entry->category)->first();
+            $category = $entry->category;
 
             switch ($userid) {
                 case 2:
@@ -76,13 +74,12 @@ class ScoringController extends Controller
         endif;
 
         $status = !$activeentry->code ? 'standby' : 'active';
-        $catcode = !$category ? 'NoActive' : $category->code;
 
         $data = [
             'status' => $status,
             'entrycode' => $activeentry,
             'check' => $checkscore,
-            'catcode' => $catcode,
+            'catcode' => $category,
             'score' => $score,
         ];
 
@@ -97,11 +94,11 @@ class ScoringController extends Controller
     public function saveScore(Request $request)
     {
         // Setup Vars
-        $code = $request->input('code');
-        $score = $request->input('score');
-        $judge = $request->input('judge');
+        $entryCode = $request->input('code');
+        $score = (int)$request->input('score');
+        $judge_id = (int)$request->input('judge');
         $category = $request->input('category');
-        $scores = new Scores();
+        //$scores = new Scores();
 
         // Check Existing Score
         $judge = null;
@@ -119,14 +116,15 @@ class ScoringController extends Controller
         }
         $checkscore = DB::table('entries')
             ->select('*')
+            ->where('code', '==', $entryCode)
             ->where($judge, '!=', NULL)->first();
 
         if ( !$checkscore ):
-            $scores->code = $code;
-            $scores->score = $score;
-            $scores->judge_id = $judge;
-            $scores->category = $category;
-            $scores->save();
+            // $scores->code = $entryCode;
+            // $scores->score = $score;
+            // $scores->judge_id = $judge_id;
+            // $scores->category = $category;
+            // $scores->save();
 
             $judge = '';
 
@@ -143,11 +141,11 @@ class ScoringController extends Controller
             }
             // Add Score to Entries Record
             DB::table('entries')
-                ->where('code', $code)
+                ->where('code', $entryCode)
                 ->update([$judge => $score]);
 
             $data = [
-                'message' => 'Score successfully saved for Entry #' . $code,
+                'message' => 'Score successfully saved for Entry #' . $entryCode,
                 'returnURL' => route('scoring'),
             ];
 
@@ -155,7 +153,7 @@ class ScoringController extends Controller
         else:
 
             $data = [
-                'message' => 'Score for Entry #' . $code . ' already exist.',
+                'message' => 'Score for Entry #' . $entryCode . ' already exist.',
                 'returnURL' => route('scoring'),
             ];
 

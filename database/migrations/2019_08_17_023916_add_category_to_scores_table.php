@@ -14,7 +14,7 @@ class AddCategoryToScoresTable extends Migration
     public function up()
     {
         Schema::table('Scores', function (Blueprint $table) {
-            $table->string('category',255)->after('judge_id');
+            $table->string('category')->after('judge_id');
         });
     }
 

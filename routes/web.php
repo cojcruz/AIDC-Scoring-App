@@ -11,6 +11,10 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CategoriesImport;
+
 Auth::routes();
 
 Route::redirect('/','dashboard');
@@ -33,7 +37,11 @@ Route::get('/dashboard/admin/find', 'AdminController@findEntry')->name('find.ent
 
 Route::post('/dashboard/admin/activate', 'AdminController@activateEntry')->name('set.active');
 
+Route::get('/dashboard/admin/activate/{id}', 'AdminController@setEntry')->name('set.activate');
+
 Route::post('/dashboard/admin/clear', 'AdminController@clearEntry')->name('set.clear');
+
+Route::get('/dashboard/admin/clear/{id}', 'AdminController@deactivateEntry')->name('set.deactivate');
 
 Route::get('/dashboard/admin/getactive', 'AdminController@getActive')->name('get.active');
 
@@ -46,3 +54,43 @@ Route::get('/dashboard/ranking/results', 'RankingController@index')->name('ranki
 Route::post('/dashboard/ranking/results', 'RankingController@show')->name('ranking.show'); 
 
 Route::post('/dashboard/ranking/export', 'RankingController@export')->name('ranking.export');
+
+Route::get('/dashboard/categories/', 'CategoriesController@index')->name('categories');
+
+Route::post('/dashboard/categories/', 'CategoriesController@save')->name('categories.save');
+
+Route::post('/dashboard/categories/add', 'CategoriesController@add')->name('categories.add');
+
+Route::post('/dashboard/categories/delete', 'CategoriesController@delete')->name('categories.delete');
+
+Route::get('/dashboard/categories/{id}/edit', 'CategoriesController@edit')->name('category.edit');
+
+Route::get('/dashboard/categories/{id}/delete', 'CategoriesController@confirmDelete')->name('categories.deleteConfirm');
+
+Route::post('/dashboard/categories/import', function() {
+	Excel::import(new CategoriesImport, request()->file('file'));
+
+	return redirect()->back()->with('success','Data Imported Successfully.');
+})->name('categories.import');
+
+Route::post('/dashboard/scoring/upload', 'UploadController@uploadFile')->name('upload.recording');
+
+Route::get('/dashboard/entries/', 'EntriesController@index')->name('entries');
+
+Route::post('/dashboard/entries/', 'EntriesController@store')->name('entries.save');
+
+Route::post('/dashboard/entries/add', 'EntriesController@create')->name('entries.add');
+
+Route::post('/dashboard/entries/delete', 'EntriesController@destroy')->name('entries.delete');
+
+Route::get('/dashboard/entries/{id}/edit', 'EntriesController@edit')->name('entries.edit');
+
+Route::get('/dashboard/entries/{id}/delete', 'EntriesController@confirmDelete')->name('entries.deleteConfirm');
+
+Route::post('/dashboard/entries/import', function() {
+	Excel::import(new EntriesImport, request()->file('file'));
+
+	return redirect()->back()->with('success','Data Imported Successfully.');
+})->name('entries.import');
+
+Route::get('/dashboard/schools','SchoolsController@index')->name('schools');

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             AddInitialEntriesToEntriesTable::class,
             AddActiveEntry::class,
             CategoriesTableSeeder::class,
+            SchoolSeeder::class,
         ]);
     }
 }
