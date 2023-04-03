@@ -8,7 +8,7 @@ class Entries extends Model
 {
     protected $fillable = [
         'code', 
-        'entry_school_id',
+        'entry_school',
         'entry_name',
         'category',
     ];

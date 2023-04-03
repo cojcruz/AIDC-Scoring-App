@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('appScript')
+<link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
 <script src="{{ asset('js/categories_app.js') }}" defer></script>
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('js/datatables.min.js') }}"></script>
 <script defer>
     jQuery( function($) {
         $('#categories').DataTable({
@@ -24,9 +25,10 @@
     @if (session('status') || session('success'))
         <div class="row justify-content-left">
             <div class="status">
-                <div class="alert alert-success" role="alert">
+                <div class="alert alert-success alert-dismissible fade slow" role="alert">
                     {{ session('status') }}
                     {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>            
             </div>
         </div>
@@ -41,33 +43,29 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Add New Category</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form action="{{ route('categories') . '/add' }}" method="post">
                     <div class="modal-body">                        
                         @csrf
                         <div class="row">
-                            <div class="col-sm-4">
-                                <label for="category">Category Label</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <input type="text" name="category" placeholder="Category Name">
+                            <div class="input-group mb-2">
+                                <label class="input-group-text w-25" for="category">Category Name</label>
+                                <input class="form-control" type="text" name="category" placeholder="Category Name">
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4">
-                                <label for="code">Category Code</label>
-                            </div>
-                            <div class="col-sm-8">
-                                <input type="text" name="code" placeholder="Category Code">
+                            <div class="input-group mb-2">
+                                <label class="input-group-text w-25" for="code">Category Code</label>
+                                <input class="form-control" type="text" name="code" placeholder="Category Code">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Add Category</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <div class="btn-group" role="group">
+                            <button type="submit" class="btn btn-primary">Add Category</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
                     </div>
                     </form>
                 </div>
@@ -96,9 +94,9 @@
         </div>
 
         <div id="toolbar" class="row justify-content-right">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addCategory">Add Category</button>
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#importCategories">Import from File</button>
+            <div class="btn-group w-25">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategory">Add Category</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importCategories">Import from File</button>
             </div>
         </div>
         <div class="row justify-content-center">
@@ -124,7 +122,13 @@
                                 {{ $category->code }}
                             </td>
                             <td>
-                                <a href="{{ route('categories') . '/' . $category->id . '/edit' }}">Edit</a> | <a href="{{ route('categories') . '/' . $category->id . '/delete' }}">Delete</a>
+                                <div class="dropdown my-2">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="ActionsMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
+                                    <div class="dropdown-menu" arial-labelledby="ActionsMenu">
+                                        <a href="{{ route('categories') . '/' . $category->id . '/edit' }}"class="dropdown-item">Edit</a>
+                                        <a href="{{ route('categories') . '/' . $category->id . '/delete' }}" class="dropdown-item">Delete</a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
 

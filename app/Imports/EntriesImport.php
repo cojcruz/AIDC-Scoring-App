@@ -2,10 +2,13 @@
 
 namespace App\Imports;
 
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
+use App\Entries;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Carbon\Carbon;
 
-class EntriesImport implements ToCollection
+class EntriesImport implements ToModel, WithStartRow, WithCustomCsvSettings
 {
     public function startRow(): int {
         return 2;
@@ -24,11 +27,11 @@ class EntriesImport implements ToCollection
     */
     public function model(array $row)
     {
-        return new Categories([
-            'code'  => $row[0],
-            'entry_school'  => $row[1],
+        return new Entries([
+            'category'  => $row[0],
+            'code'  => $row[1],
             'entry_name' => $row[2],
-            'category' => $row[3],
+            'entry_school' => $row[3],
             'created_at' => Carbon::now(),
         ]);
     }

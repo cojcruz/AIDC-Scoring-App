@@ -73,10 +73,10 @@
 
                     $('#submit').click( function() {
                         if ( $('#Entry').val() ) {
-                            $('#myModal').modal();
+                            $('#confirmScore').modal('show');
                             $('#score').val( entry );
                         } else {
-                            alert('Please enter scrore.')
+                            alert('Please enter score.')
                         }
                     });
 
@@ -129,7 +129,7 @@
                 <h2 class="text-center">
                     @if ( $check )
                         Entry <span style="font-size: 50%;">#</span>{{ $check->code }}<br>
-                        Score {{ $check->score }}
+                        Score: <span class="text-primary display-3">{{ $check->score }}</span>
                     @else 
                         Waiting for Active Contestant
                     @endif
@@ -168,7 +168,7 @@
                     @else 
                         <h2 class="text-center">
                             Entry <span style="font-size: 50%;">#</span>{{ $check->code }}<br>
-                            Score {{ $score }}
+                            Score <span class="text-primary display-3 align-middle">{{ $score }}</span>
                         </h2>
                     @endif
 
@@ -181,16 +181,14 @@
 
 @section('footer')
 <!-- Confirm Score -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="confirmScore" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Confirm Entry Score?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Confirm Entry Score?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
 
         <form action="{{ route('savescore') }}" method="post" id="submitModalForm">
             @csrf
@@ -200,11 +198,13 @@
             <input type="text" name="score" readonly id="score" class="confirmScore form-control">
         </form>
 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Change Score</button>
-        <button type="button" id="savescore" class="btn btn-primary">Save Changes</button>
-      </div>
+        </div>
+        <div class="modal-footer">
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Change Score</button>
+                <button type="button" id="savescore" class="btn btn-primary">Save Score</button>
+            </div>
+        </div>
     </div>
   </div>
 </div>  

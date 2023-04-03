@@ -55,7 +55,9 @@ class AdminController extends Controller
      */
     public function getActive()
     {
-		$data = DB::table('active_entry')->select('code')->where('id', 1)->get(array('code'))->toArray();
+		$data = DB::table('active_entry')
+            ->select('code')
+            ->where('id', 1)->get(array('code'))->toArray();
 		
 		$data = json_encode($data);
 
@@ -69,13 +71,17 @@ class AdminController extends Controller
      */
     public function activateEntry(Request $request)
     {
-        $data = DB::table('active_entry')
+        DB::table('active_entry')
             ->update(['code' => $request->input('code')])
             ->where('id', 1 );
 
-        Log::info($data);
+        $entry = DB::table('entries')
+            ->where('code',$request->input('code'))->first();
 
-        //return $data == 1 ? "success" : "fail";
+        DB::table('active_category')
+            ->update(['code' => $entry->category])
+            ->where('id',1);
+        
         return redirect()->back()->with('status', "Entry " . $request->input('code') . ' Activated!');
     }
     /**
@@ -89,6 +95,14 @@ class AdminController extends Controller
         DB::table('active_entry')
             ->where('id', '1')
             ->update(['code' => $id]);
+
+        $entry = DB::table('entries')
+            ->select('*')
+            ->where('code', $id)->first();
+
+        DB::table('active_category')
+            ->where('id', '1')
+            ->update(['code' => $entry->category]);
 
         return redirect()->back()->with('status', "Entry " . $id . ' Activated!');
     }
@@ -127,6 +141,10 @@ class AdminController extends Controller
     {
         // Remove existing active entry in active_entry table
         DB::table('active_entry')
+            ->where('id', '1')
+            ->update(['code' => NULL]);
+
+        DB::table('active_category')
             ->where('id', '1')
             ->update(['code' => NULL]);
 

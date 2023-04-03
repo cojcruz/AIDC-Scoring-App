@@ -24,11 +24,9 @@ body {
 		left: 0;
 		z-index: -1;
 		opacity: 0.3;
-		background: url('/images/abap_logo.jpg') no-repeat center fixed #fff;
-		background-size: contain; 
+		background: url('/images/cbap_logo.png') no-repeat center fixed #fff;
+		background-size: 60%; 
 	}
-
-
 
 	#Entry, #score, .entry {
 		font-size: 80px;
@@ -99,19 +97,18 @@ body {
 					height: calc(100vh - 80px);
 					overflow-y: auto;
 					overflow-x: hidden;
+					
+					.entryScores {
 
-					.dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate {
-						display: inline-block;
-						width: 50%;
-						margin-top: 10px;
-					}
+						color: transparent;
+						transform: all 250ms;
+						
+						&:hover {
+							color: #000;
+						}
 
-					.dataTables_filter, .dataTables_paginate{
-						text-align: right;
-
-						.paginate_button {
-							cursor: pointer;
-							font-weight: 700;
+						strong {
+							font-size: 75%;
 						}
 					}
 				}
@@ -170,9 +167,23 @@ body {
 					box-shadow: 0 3px 3px rgba(0,0,0,0.25);
 					padding: 20px 0;
 				}
-				.paginate_button {
-				    display: inline-block;
-				    padding: 2px;
+			}
+
+			.paginate_button {
+			    display: inline-block;
+			    padding: 2px;
+			    cursor: pointer;
+			}
+
+			#rankings_wrapper {
+
+				.dt-buttons, #rankings_filter {
+					display: inline-block;
+					width: 50%;
+				}
+
+				#rankings_filter {
+					text-align: right;
 				}
 			}
 		}

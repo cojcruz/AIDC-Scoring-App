@@ -33,14 +33,18 @@ class EntriesController extends Controller
         $schools = DB::table('school')
             ->select('*')
             ->orderBy('id')->get();
+        $categories = DB::table('categories')
+            ->select('*')
+            ->orderBy('id')->get();
 
         $data = [
             'entries' => $entries,
             'activeEntry' => $activeEntry,
             'schools' => $schools,
+            'categories' => $categories,
         ];
 
-        Log:info($data);
+        //Log:info($data);
 
         return view('entries', $data);
     }
@@ -60,30 +64,22 @@ class EntriesController extends Controller
         $category = $request->input('entryCategory');
         $status = '';
 
-        $currentEntry = DB::table('categories')
+        $currentEntry = DB::table('entries')
             ->select('*')
             ->where('id', $id)->first();
 
-        if ( $code != $currentEntry->code || $label != $currentEntry->name ) {
+        try {
+            DB::table('entries')
+            ->where('id',$id)
+            ->update([
+                'code'=>$code, 
+                'entry_school'=>$school,
+                'entry_name'=>$name,
+                'category'=>$category,
+            ]);
+        } catch (Exception $e ) {
 
-            try {
-                DB::table('entries')
-                ->where('id',$id)
-                ->update([
-                    'code'=>$code, 
-                    'entry_school'=>$school,
-                    'entry_name'=>$name,
-                    'category'=>$category,
-                ]);
-            } catch (Exception $e ) {
-                echo $e->getMessage();
-            }
-
-            $status = 'Save successful!';
-        } else {
-
-            $status = 'No changes were made.';
-
+            return redirect()->route('entries')->with('status', $e->getMessage());
         }
 
         return redirect()->route('entries')->with('status', $status);

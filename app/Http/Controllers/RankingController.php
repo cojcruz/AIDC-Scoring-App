@@ -67,16 +67,6 @@ class RankingController extends Controller
             'entries' => $entries,
         ];
 
-
         return view('ranking', $data);
-    }
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function export(Request $request)
-    {
-        return Excel::download(new EntriesExport, 'entries.xlsx');   
     }
 }

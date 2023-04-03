@@ -97,7 +97,7 @@
             
 
             <!-- Right Side Of Navbar -->
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav me-0 ms-auto">
                 <!-- Authentication Links -->
                 @guest
                     <li class="nav-item">
@@ -105,7 +105,7 @@
                     </li>
                 @else
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
 
@@ -128,29 +128,32 @@
         <main class="py-4">
             <div class="row">
                 <div id="sidebar" class="col-md-2">
-                    <ul class="navbar-nav">
+                    <ul class="nav">
                         @auth
                             @if ( Auth::user()->admin )
-                            <li class="nav-item">
-                                <a class="dropdown-item" href="{{ route('livescoring') }}" target="liveScoring"><i class="material-icons">grade</i> Live Scoring</a>
+                            <li class="nav-item w-100">
+                                <a class="nav-link" href="{{ route('livescoring') }}" target="liveScoring"><i class="material-icons">grade</i> Live Scoring</a>
                             </li>
                             @else 
-                            <li class="nav-item">
-                                <a class="dropdown-item" href="{{ route('scoring') }}" target="liveScoring"><i class="material-icons">grade</i> Live Scoring</a>
+                            <li class="nav-item w-100">
+                                <a class="nav-link" href="{{ route('scoring') }}" target="liveScoring"><i class="material-icons">grade</i> Live Scoring</a>
                             </li>
                             @endif
                             @if ( Auth::user()->admin ) 
-                            <li class="nav-item">
-                                <a class="dropdown-item" href="{{ route('admin') }}"><i class="material-icons">construction</i> Admin Tools</a>
+                            <li class="nav-item w-100">
+                                <a class="nav-link" href="{{ route('admin') }}"><i class="material-icons">construction</i> Admin Tools</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="dropdown-item" href="{{ route('categories') }}"><i class="material-icons">category</i> Categories</a>
+                            <li class="nav-item w-100">
+                                <a class="nav-link" href="{{ route('categories') }}"><i class="material-icons">category</i> Categories</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="dropdown-item" href="{{ route('entries') }}"><i class="material-icons">person</i> Entries</a>
+                            <li class="nav-item w-100">
+                                <a class="nav-link" href="{{ route('entries') }}"><i class="material-icons">person</i> Entries</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="dropdown-item" href="{{ route('schools') }}"><i class="material-icons">school</i> Schools</a>
+                            <li class="nav-item w-100">
+                                <a class="nav-link" href="{{ route('schools') }}"><i class="material-icons">school</i> Schools</a>
+                            </li>
+                            <li class="nav-item w-100">
+                                <a class="nav-link" href="{{ route('ranking') }}"><i class="material-icons">star</i> Rankings</a>
                             </li>
                             @endif
                         @endauth

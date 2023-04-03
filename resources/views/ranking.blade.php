@@ -1,14 +1,19 @@
-@extends('layouts.live')
+@extends('layouts.app')
 
 @section('appScript')
-<link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
-<script src="{{ asset('js/live_app.js') }}" defer></script>
+<link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
+<script src="{{ asset('js/live_app.js') }}"></script>
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
-<script defer>
+<script src="{{ asset('js/datatables.min.js') }}"></script>
+<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('js/jszip.min.js') }}"></script>
+<script src="{{ asset('js/pdfmake.min.js') }}"></script>
+<script src="{{ asset('js/vfs_fonts.js') }}"></script>
+<script src="{{ asset('js/buttons.html5.min.js') }}"></script>
+<script>
     jQuery( function($) {
-        $('#rankings').DataTable({
-            'order' : [[4, 'desc']],
+        var rankings = $('#rankings').DataTable({
+            'order' : [[7, 'desc']],
             'scrollCollapse' : true,
             'columnDefs' : [
                 {
@@ -16,7 +21,23 @@
                     'targets' : '_all'
                 }
             ],
+            dom: 'Bfrtip',
+            buttons: [{
+                extend: 'csv',
+                filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
+            },{
+                extend: 'excel',
+                filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
+            },{
+                extend: 'pdf',
+                filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
+            },{
+                extend: 'print',
+                filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
+            }]
         });
+
+        $('.dt-buttons > button').addClass('btn btn-primary');
     });
 </script>
 @endsection
@@ -40,7 +61,7 @@
         </div>
     </div>
     @else
-    <div class="row justify-content-center h-100">
+    <div class="row justify-content-center h-100" style="align-items: center;">
         <div class="col-md-12 h-100">   
 
                 <div class="card mt-5">
@@ -48,19 +69,21 @@
                         <h1> Find Rankings</h1>
                     </div>
                     <div class="card-body text-center pb-0">
-                        <form action="{{ route('ranking.show') }}" method="post" target="Ranking">
+                        <form action="{{ route('ranking.show') }}" method="post">
                             @csrf 
-                            <label class="h5" for="category">Category</label>
-                            <select class="form-control d-inline-block w-50 mb-2" name="category">
-                                <option value="All">All</option>
-                                @foreach ( $categories as $category )
-                                    
-                                    <option value="{{ $category->code }}" <?php echo ($cat == $category->code) ? 'selected' : ''; ?>>{{ $category->name }}</option>
-                                    
-                                @endforeach
-                            </select>
+                            <div class="input-group w-50 m-auto">
+                                <label class="input-group-text" class="h5" for="category">Category</label>
+                                <select class="form-select" name="category">
+                                    <option value="All">All</option>
+                                    @foreach ( $categories as $category )
+                                        
+                                        <option value="{{ $category->code }}" <?php echo ($cat == $category->code) ? 'selected' : ''; ?>>{{ $category->name }}</option>
+                                        
+                                    @endforeach
+                                </select>
 
-                            <button class="btn btn-primary mx-auto" target="Ranking">Show</button>
+                                <button class="btn btn-primary mx-auto" target="Ranking">Show</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -78,9 +101,12 @@
                         </h1>
                     </div>
                     <div class="card-body">
-                        <table id="rankings" class="table text-center">
-                            <thead class="thead-light">                
+                        <table id="rankings" class="table">
+                            <thead class="thead-light">    
+                                <th scope="col">Category</th>            
                                 <th scope="col">Entry</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">School</th>
                                 <th scope="col">Judge A</th>
                                 <th scope="col">Judge B</th>
                                 <th scope="col">Judge C</th>
@@ -89,10 +115,23 @@
                             <tbody>
                                 @foreach ( $entries as $entry )
 
-                                <?php $average = round( ( (int)$entry->judge_a + (int)$entry->judge_b + (int)$entry->judge_c) / 3, 2); // Compute for Average Score?>
+                                    @php
+                                        $average = round( ( (int)$entry->judge_a + (int)$entry->judge_b + (int)$entry->judge_c) / 3, 2); // Compute for Average Score
+                                    @endphp
                                 
                                 <tr>
-                                    <th scope="row">{{ $entry->code }}</th>
+                                    <td>
+                                        {{ $entry->category }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->code }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->entry_name }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->entry_school }}
+                                    </td>
                                     <td>
                                         @if ( $entry->judge_a )
                                             {{ $entry->judge_a }}

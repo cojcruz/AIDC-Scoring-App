@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('appScript')
+<link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
 <script src="{{ asset('js/categories_app.js') }}" defer></script>
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('js/datatables.min.js') }}"></script>
 <script defer>
     jQuery( function($) {
         $('#schools').DataTable({
@@ -53,7 +54,7 @@
                                 <label for="name">School Name</label>
                             </div>
                             <div class="col-sm-8">
-                                <input type="text" name="name" placeholder="Entry Code">
+                                <input type="text" name="name" class="form-control" placeholder="Name of School">
                             </div>
                         </div>
                     </div>

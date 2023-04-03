@@ -14,6 +14,8 @@
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CategoriesImport;
+use App\Imports\EntriesImport;
+use App\Imports\SchoolsImport;
 
 Auth::routes();
 
