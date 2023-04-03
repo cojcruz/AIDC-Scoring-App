@@ -42,7 +42,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Add New School</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Add School</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                     </form>
                 </div>
@@ -89,9 +89,9 @@
         </div>
 
         <div id="toolbar" class="row justify-content-right">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addEntries">Add School</button>
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#importEntries">Import from File</button>
+            <div class="btn-group w-25">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEntries">Add School</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importEntries">Import from File</button>
             </div>
         </div>
         <div class="row justify-content-center">

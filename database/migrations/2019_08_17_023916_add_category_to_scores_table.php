@@ -13,7 +13,7 @@ class AddCategoryToScoresTable extends Migration
      */
     public function up()
     {
-        Schema::table('Scores', function (Blueprint $table) {
+        Schema::table('scores', function (Blueprint $table) {
             $table->string('category')->after('judge_id');
         });
     }
@@ -25,7 +25,7 @@ class AddCategoryToScoresTable extends Migration
      */
     public function down()
     {
-        Schema::table('Scores', function (Blueprint $table) {
+        Schema::table('scores', function (Blueprint $table) {
             $table->dropColumn(['category']);
         });
     }
