@@ -30,7 +30,7 @@ class EntriesController extends Controller
             ->select('*')
             ->orderBy('id')->get();
         $activeEntry = DB::table('active_entry')->first();
-        $schools = DB::table('school')
+        $schools = DB::table('schools')
             ->select('*')
             ->orderBy('id')->get();
         $categories = DB::table('categories')

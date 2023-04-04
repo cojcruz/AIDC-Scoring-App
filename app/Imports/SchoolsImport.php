@@ -8,7 +8,6 @@ use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Carbon\Carbon;
 
-
 class SchoolsImport implements ToModel, WithStartRow, WithCustomCsvSettings
 {
     public function startRow(): int {
@@ -20,10 +19,13 @@ class SchoolsImport implements ToModel, WithStartRow, WithCustomCsvSettings
             'delimiter' => ','
         ];
     }
+    
     /**
-    * @param Collection $collection
+    * @param array $row
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null
     */
-    public function collection(Collection $collection)
+    public function model(array $row)
     {
         return new School([
             'school_name'  => $row[0],

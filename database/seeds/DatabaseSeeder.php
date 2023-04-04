@@ -15,9 +15,9 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             AddInitialEntriesToEntriesTable::class,
             AddActiveEntry::class,
-            AddActiveCategory::class,
             CategoriesTableSeeder::class,
             SchoolSeeder::class,
+            AddActiveCategory::class,
         ]);
     }
 }

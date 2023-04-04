@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Carbon\Carbon;
 
 class SchoolsController extends Controller
 {
@@ -24,7 +25,7 @@ class SchoolsController extends Controller
      */
     public function index()
     {
-        $schools = DB::table('school')
+        $schools = DB::table('schools')
             ->select('*')
             ->orderBy('id')->get();
 
@@ -40,9 +41,24 @@ class SchoolsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $status = '';
+
+        try {
+            DB::table('schools')->insert([
+                'school_name' => $request->input('name'),
+                'created_at' => Carbon::now()
+            ]);
+
+            $status = "Entry Added!";
+        } catch (Exception $e) {
+            Log::ERROR('Caught Error: ' . $e->getMessage() . '\n');
+
+            $status = "Failed to add new entry.";
+        }
+
+        return redirect()->route('schools')->with('status', $status);
     }
 
     /**
@@ -53,7 +69,23 @@ class SchoolsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id = $request->input('id');
+        $name = $request->input('name');
+        $status = '';
+
+        try {
+            DB::table('schools')
+            ->where('id',$id)
+            ->update([
+                'school_name' => $name, 
+                'updated_at' => Carbon::now()
+            ]);
+        } catch (Exception $e ) {
+
+            return redirect()->route('schools')->with('status', $e->getMessage());
+        }
+
+        return redirect()->route('schools')->with('status', $status);
     }
 
     /**
@@ -63,17 +95,6 @@ class SchoolsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
@@ -91,13 +112,60 @@ class SchoolsController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {        
+        $school = DB::table('schools')
+            ->select('*')
+            ->where('id', $id)->first();
+
+        $data = [
+            'school' => $school,
+        ];
+
+        return view('editSchool', $data);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
+    {                       
+        $status = '';
+
+        try {
+            DB::table('schools')
+                ->where('id', $request->input('id'))
+                ->delete();
+
+            $status = 'Entry successfully deleted!';
+
+        } catch (Exception $e) {
+            Log::ERROR('Caught Error: ' . $e->getMessage(), '\n' );
+
+            $status = 'Error: ' . $e->getMessage();
+        }
+
+        return redirect()->route('schools')->with('status', $status);
+    }
+
+    public function confirmDelete(string $id) 
     {
-        //
+        $school = DB::table('schools')
+                        ->select('*')
+                        ->where('id', $id)->first();
+
+        $data = [
+            'school' => $school,
+        ];
+
+        return view('deleteSchool', $data );
     }
 }

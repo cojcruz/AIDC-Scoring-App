@@ -96,3 +96,19 @@ Route::post('/dashboard/entries/import', function() {
 })->name('entries.import');
 
 Route::get('/dashboard/schools','SchoolsController@index')->name('schools');
+
+Route::post('/dashboard/schools/', 'SchoolsController@store')->name('schools.save');
+
+Route::post('/dashboard/schools/add', 'SchoolsController@create')->name('schools.add');
+
+Route::get('/dashboard/schools/{id}/edit', 'SchoolsController@edit')->name('schools.edit');
+
+Route::post('/dashboard/schools/delete', 'SchoolsController@destroy')->name('schools.delete');
+
+Route::get('/dashboard/schools/{id}/delete', 'SchoolsController@confirmDelete')->name('schools.deleteConfirm');
+
+Route::post('/dashboard/schools/import', function() {
+	Excel::import(new SchoolsImport, request()->file('file'));
+
+	return redirect()->back()->with('success','Data Imported Successfully.');
+})->name('schools.import');

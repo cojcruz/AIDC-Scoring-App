@@ -46,7 +46,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('entries') . '/add' }}" method="post">
+                    <form action="{{ route('schools') . '/add' }}" method="post">
                     <div class="modal-body">                        
                         @csrf
                         <div class="row">
@@ -76,7 +76,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('entries.import') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('schools.import') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="input-group mb-3">
                                 <input type="file" name="file" class="form-control">
@@ -109,7 +109,7 @@
                                 {{ $school->school_name }}
                             </th>
                             <td>
-                                <a href="{{ route('entries') . '/' . $school->id . '/edit' }}">Edit</a> | <a href="{{ route('entries') . '/' . $school->id . '/delete' }}">Delete</a>
+                                <a href="{{ route('schools') . '/' . $school->id . '/edit' }}">Edit</a> | <a href="{{ route('schools') . '/' . $school->id . '/delete' }}">Delete</a>
                             </td>
                         </tr>
 
