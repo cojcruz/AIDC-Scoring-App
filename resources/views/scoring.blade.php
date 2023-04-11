@@ -17,10 +17,19 @@
     </style>
     <script src="{{ asset('js/jquery.stopwatch.js') }}"></script>
     <script>
+
         jQuery( function($) {
             $(document).ready(function() {
+                var complete = false;
+
                 @if ( !$check )
                 $('#stopwatch').stopwatch().stopwatch('start');
+
+                $(window).bind('beforeunload', function() {
+                    if ( !complete ) {
+                        return "Leaving would loss existing voice recording.";
+                    }
+                });
 
                 // Voice Recorder Init
                 const handleSuccess = function(stream) {
@@ -81,6 +90,7 @@
                     });
 
                     $('#savescore').click( function() {
+                        complete = true;
                         mediaRecorder.stop();
                         $('#stopwatch').stopwatch().stopwatch('stop');
                         $('#submitModalForm').submit();
@@ -110,8 +120,8 @@
 @endsection
 
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-md-8">
+<div class="row justify-content-center align-items-center" style="height: 100vh;">
+    <div class="col-md-12 align-items-center">
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title text-center">
@@ -125,51 +135,61 @@
             </div>
             <div class="card-body">
                 @if ( $status == 'standby' )
-
-                <h2 class="text-center">
-                    @if ( $check )
-                        Entry <span style="font-size: 50%;">#</span>{{ $check->code }}<br>
-                        Score: <span class="text-primary display-3">{{ $check->score }}</span>
-                    @else 
-                        Waiting for Active Contestant
-                    @endif
-                </h2>
-                
+                <div class="row align-items-center">
+                    <div class="col-12">
+                        <h2 class="text-center">
+                            @if ( $check )
+                                Entry <span style="font-size: 50%;">#</span>{{ $check->code }}<br>
+                                Score: <span class="text-primary display-3">{{ $check->score }}</span>
+                            @else 
+                                Waiting for Active Contestant
+                            @endif
+                        </h2>
+                    </div>
                 @else
 
                     @if ( !$check )
                         <div class="row justify-content-center">
-                            <div class="col-md-8">
+                            <div class="col-md-6 mx-auto">
+                                <div class="mx-auto text-center w-100">
+                                    <h6 class="display-6 d-inline-block">
+                                        <div class="spinner-grow text-danger" role="status"><span class="visually-hidden">Loading...</span></div> Recording (
+                                        <div class="d-inline-block" id="stopwatch">00:00:00</div>
+                                        )
+                                    </h6>
+                                </div>
                                 <form method="post" id="entryscore">
                                     <input type="text" maxlength="5" id="Entry" class="input" readonly />
                                 </form>
+                                <div class="numpad_wrapper" style="display: flex; flex-wrap: wrap; justify-content: center;">
+                                    <button class="btn btn-light numpad" data-value='1'>1</button>
+                                    <button class="btn btn-light numpad" data-value='2'>2</button>
+                                    <button class="btn btn-light numpad" data-value='3'>3</button>
+                                    <button class="btn btn-light numpad" data-value='4'>4</button>
+                                    <button class="btn btn-light numpad" data-value='5'>5</button>
+                                    <button class="btn btn-light numpad" data-value='6'>6</button>
+                                    <button class="btn btn-light numpad" data-value='7'>7</button>
+                                    <button class="btn btn-light numpad" data-value='8'>8</button>
+                                    <button class="btn btn-light numpad" data-value='9'>9</button>
+                                    <button class="btn btn-light numpad" data-value='.'>.</button>
+                                    <button class="btn btn-light numpad" data-value='0'>0</button>
+                                    <button class="btn btn-light numpad" data-value='CLR'><i class="material-icons">backspace</i></button>
                                 </div>
+                                <div class="submit_wrapper px-2 text-center">
+                                    <button id="submit" class="submit btn btn-primary w-75 mx-auto">Submit</button>
+                                </div>            
                             </div>
-                    	</div>
-                        <div class="numpad_wrapper" style="display: flex; flex-wrap: wrap; justify-content: center;">
-                            <button class="btn btn-light numpad" data-value='1'>1</button>
-                            <button class="btn btn-light numpad" data-value='2'>2</button>
-                            <button class="btn btn-light numpad" data-value='3'>3</button>
-                            <button class="btn btn-light numpad" data-value='4'>4</button>
-                            <button class="btn btn-light numpad" data-value='5'>5</button>
-                            <button class="btn btn-light numpad" data-value='6'>6</button>
-                            <button class="btn btn-light numpad" data-value='7'>7</button>
-                            <button class="btn btn-light numpad" data-value='8'>8</button>
-                            <button class="btn btn-light numpad" data-value='9'>9</button>
-                            <button class="btn btn-light numpad" data-value='.'>.</button>
-                            <button class="btn btn-light numpad" data-value='0'>0</button>
-                            <button class="btn btn-light numpad" data-value='CLR'><i class="material-icons">backspace</i></button>
-                        </div>
-                        <div class="submit_wrapper px-2">
-                            <h3 class="display-5">Recording</h3>
-                            <div id="stopwatch">00:00:00</div>
-                            <button id="submit" class="submit btn btn-primary col-sm-12">Submit</button>
-                        </div>                        
+                        </div>            
                     @else 
                         <h2 class="text-center">
                             Entry <span style="font-size: 50%;">#</span>{{ $check->code }}<br>
                             Score <span class="text-primary display-3 align-middle">{{ $score }}</span>
                         </h2>
+                        <script>
+                            setInterval(function() {
+                                window.location.reload();
+                            }, 5000);
+                        </script>
                     @endif
 
                 @endif

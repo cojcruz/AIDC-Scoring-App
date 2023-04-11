@@ -12,10 +12,10 @@
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
+<div class="container" style="height: 100vh;">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-md-12 d-flex align-items-center">
+            <div class="card w-100">
                 <div class="card-header">
                     <h1 class="card-title text-center">
                         Success!
