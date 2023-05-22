@@ -56,7 +56,8 @@ class ScoringController extends Controller
         if ( $code != NULL ):
             $entry = DB::table('entries')
                 ->select('*')
-                ->where('code', $code)->first();                
+                ->where('code', $code)->first(); 
+
             // Get Category Details
             $category = $entry->category;
 
@@ -95,11 +96,14 @@ class ScoringController extends Controller
     {
         // Setup Vars
         $entryCode = $request->input('code');
+        $catA = (int)$request->input('technique');
+        $catB = (int)$request->input('artistry');
+        $catC = (int)$request->input('musicality');
+        $catD = (int)$request->input('costume');
         $score = (int)$request->input('score');
         $judge_id = (int)$request->input('judge');
         $category = $request->input('category');
-        //$scores = new Scores();
-
+        
         // Check Existing Score
         $judge = null;
 
@@ -130,19 +134,25 @@ class ScoringController extends Controller
 
             switch (Auth::user()->id) {
                 case 2:
-                    $judge = 'judge_a';
+                    $judge = 'a';
                 break;
                 case 3:
-                    $judge = 'judge_b';
+                    $judge = 'b';
                 break;
                 case 4:
-                    $judge = 'judge_c';
+                    $judge = 'c';
                 break;
             }
             // Add Score to Entries Record
             DB::table('entries')
                 ->where('code', $entryCode)
-                ->update([$judge => $score]);
+                ->update([
+                    'j' . strtoupper($judge) . '-catA' => $catA,
+                    'j' . strtoupper($judge) . '-catB' => $catB,
+                    'j' . strtoupper($judge) . '-catC' => $catC,
+                    'j' . strtoupper($judge) . '-catD' => $catD,
+                    'judge_' . $judge => $score,
+                ]);
 
             $data = [
                 'message' => 'Score successfully saved for Entry #' . $entryCode,

@@ -112,3 +112,7 @@ Route::post('/dashboard/schools/import', function() {
 
 	return redirect()->back()->with('success','Data Imported Successfully.');
 })->name('schools.import');
+
+Route::get('/dashboard/recordings', 'RecordingsController@index')->name('recordings');
+
+Route::get('/dashboard/recordings/convert', 'RecordingsController@convert')->name('convert');

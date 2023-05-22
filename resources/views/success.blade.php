@@ -5,7 +5,7 @@
     <script src="{{ asset('js/judgescoring_app.js') }}"></script>
     <script>
         setInterval( function() {
-                        history.back();
+                        window.location.href = "{{ route('scoring') }}";
                     }, 10000);
     </script>
     

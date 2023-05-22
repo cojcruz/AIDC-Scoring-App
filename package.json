@@ -28,6 +28,7 @@
         "ajv": "6.7.0",
         "bootstrap-vue": "^2.0.0-rc.27",
         "datatables.net-bs4": "^1.10.19",
+        "ffmpeg": "^0.0.4",
         "imagemin": "^5.3.1",
         "material-icons": "^0.3.1",
         "mic-recorder-to-mp3": "^2.2.2",

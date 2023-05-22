@@ -83,7 +83,7 @@
                     @endphp
                     <div class="card-group">
                         @foreach ( $judges as $judge )                        
-                        <div class="card text-center border-0">
+                        <div class="card text-center border border-black">
                             <h5 class="card-title bg-primary display-6 text-white py-2">Judge {{ $i++ }}</h5>
 
                             <div class="card-body py-5">
@@ -95,9 +95,9 @@
                     @php
                         $average = round( ( (int)$entry->judge_a + (int)$entry->judge_b + (int)$entry->judge_c) / 3, 2); // Compute for Average Score
                     @endphp
-                    <div class="card-footer">
+                    <div class="card-footer border text-bg-primary">
                         <h4 class="fw-bold text-center display-5">Average</h4>
-                        <h2 class="score display-3 text-center">{{ $average }}</h2>
+                        <h2 class="score h1 display-1 text-center">{{ $average }}</h2>
                     </div>
                 </div>
             </div>

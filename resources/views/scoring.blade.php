@@ -17,10 +17,41 @@
     </style>
     <script src="{{ asset('js/jquery.stopwatch.js') }}"></script>
     <script>
-
         jQuery( function($) {
             $(document).ready(function() {
-                var complete = false;
+                let catA = 0;
+                let catB = 0;
+                let catC = 0;
+                let catD = 0;
+
+                $('#technique').on('input', function() {
+                    $('#techNumber').html($(this).val());
+                    catA = Number($(this).val());
+                    sumUp();
+                });
+                $('#artistry').on('input', function() {
+                    $('#artNumber').html($(this).val());
+                    catB = Number($(this).val());
+                    sumUp();
+                });
+                $('#musicality').on('input', function() {
+                    $('#musicNumber').html($(this).val());
+                    catC = Number($(this).val());
+                    sumUp();
+                });
+                $('#costume').on('input', function() {
+                    $('#costNumber').html($(this).val());
+                    catD = Number($(this).val());
+                    sumUp();
+                });
+
+                function sumUp() {
+                    let score = catA + catB + catC + catD;
+                    
+                    $('#totalScore').val(score);
+                }
+
+                let complete = false;
 
                 @if ( !$check )
                 $('#stopwatch').stopwatch().stopwatch('start');
@@ -42,15 +73,17 @@
                     });
 
                     mediaRecorder.addEventListener('stop', function() {
-                        var fd = new FormData();
-                        var audio = new Blob(recordedChunks); 
-                        var oReq = new XMLHttpRequest();
+                        let fd = new FormData();
+                        let audio = new Blob(recordedChunks); 
+                        let oReq = new XMLHttpRequest();
 
                         fd.append('_token', '{{ csrf_token() }}');
                         fd.append('file', audio);
                         fd.append('entryCode', '{{ $entrycode->code }}');
                         fd.append('catCode', '{{ $catcode }}');
                         fd.append('judge', '{{ Auth::user()->id }}');
+
+                        console.log('test')
 
                         oReq.open('POST', '{{ route('upload.recording') }}', true);
                         oReq.onload = function( oEvent ) {
@@ -63,26 +96,16 @@
                     mediaRecorder.start();
 
                     // Scoring Input Init    
-                    var entry;
-
-                    $('.numpad').click( function() {
-                        var value = $(this).data('value');
-                        
-                        entry = $('#Entry').val();
-
-                        if ( value == 'CLR' ) {
-                            entry = entry.substring(0, entry.length -1);
-                            $('#Entry').val( entry );
-                        } else {
-                            entry = entry + value;
-                            $('#Entry').val( entry );
-                            $('#score').val( entry );
-                        }
-                    });
+                    let entry;                    
 
                     $('#submit').click( function() {
-                        if ( $('#Entry').val() ) {
+                        if ( Number($('#totalScore').val()) > 0 ) {
+                            entry = $('#totalScore').val();
                             $('#confirmScore').modal('show');
+                            $('#catA').val(catA);
+                            $('#catB').val(catB);
+                            $('#catC').val(catC);
+                            $('#catD').val(catD);
                             $('#score').val( entry );
                         } else {
                             alert('Please enter score.')
@@ -159,22 +182,63 @@
                                     </h6>
                                 </div>
                                 <form method="post" id="entryscore">
-                                    <input type="text" maxlength="5" id="Entry" class="input" readonly />
+                                    <div class="row">
+                                        <div class="col-md-6 p-4">
+                                            <div class="row mb-1 align-items-center">
+                                                <div class="col-md-8">
+                                                    <label for="technique" class="display-6">Technique</label>
+                                                    <input type="range" min="0" max="40" value="0" name="technique" class="w-100 slider form-range mt-2 d-block" id="technique">
+                                                </div>
+                                                <div class="col-md-4 text-center">
+                                                    <div id="techNumber" class="display-6 border scorelabel py-2">0</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 p-4">
+                                            <div class="row mb-1 align-items-center">
+                                                <div class="col-md-8">
+                                                    <label for="artistry" class="display-6">Artistry</label>
+                                                    <input type="range" min="0" max="40" value="0" name="artistry" class="w-100 slider form-range mt-2 d-block" id="artistry">
+                                                </div>
+                                                <div class="col-md-4 text-center">
+                                                    <div id="artNumber" class="display-6 border scorelabel py-2">0</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 p-4">
+                                            <div class="row mb-1 align-items-center">
+                                                <div class="col-md-8">
+                                                    <label for="musicality" class="display-6">Musicality</label>
+                                                    <input type="range" min="0" max="15" value="0" name="musicality" class="w-100 slider form-range mt-2 d-block" id="musicality">
+                                                </div>
+                                                <div class="col-md-4 text-center">
+                                                    <div id="musicNumber" class="display-6 border scorelabel py-2">0</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 p-4">
+                                            <div class="row mb-1 align-items-center">
+                                                <div class="col-md-8">
+                                                    <label for="costume" class="display-6">Costume</label>
+                                                    <input type="range" min="0" max="5" value="0" name="costume" class="w-100 slider form-range mt-2 d-block" id="costume">
+                                                </div>
+                                                <div class="col-md-4 text-center">
+                                                    <div id="costNumber" class="display-6 border scorelabel py-2">0</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-5">
+                                        <div class="col-md-8">
+                                            <label for="totalScore" class="display-6">Total Score</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" maxlength="5" name="totalScore" id="totalScore" class="display-6 float-end w-100 text-center" value="0" readonly />
+                                        </div>
+                                    </div>
                                 </form>
-                                <div class="numpad_wrapper" style="display: flex; flex-wrap: wrap; justify-content: center;">
-                                    <button class="btn btn-light numpad" data-value='1'>1</button>
-                                    <button class="btn btn-light numpad" data-value='2'>2</button>
-                                    <button class="btn btn-light numpad" data-value='3'>3</button>
-                                    <button class="btn btn-light numpad" data-value='4'>4</button>
-                                    <button class="btn btn-light numpad" data-value='5'>5</button>
-                                    <button class="btn btn-light numpad" data-value='6'>6</button>
-                                    <button class="btn btn-light numpad" data-value='7'>7</button>
-                                    <button class="btn btn-light numpad" data-value='8'>8</button>
-                                    <button class="btn btn-light numpad" data-value='9'>9</button>
-                                    <button class="btn btn-light numpad" data-value='.'>.</button>
-                                    <button class="btn btn-light numpad" data-value='0'>0</button>
-                                    <button class="btn btn-light numpad" data-value='CLR'><i class="material-icons">backspace</i></button>
-                                </div>
                                 <div class="submit_wrapper px-2 text-center">
                                     <button id="submit" class="submit btn btn-primary w-75 mx-auto">Submit</button>
                                 </div>            
@@ -215,7 +279,30 @@
             <input type="hidden" name="code" value="{{ $entrycode->code }}">
             <input type="hidden" name="judge" value="{{ Auth::user()->id }}">
             <input type="hidden" name="category" value="{{ $catcode }}"> 
-            <input type="text" name="score" readonly id="score" class="confirmScore form-control">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center fw-bold">
+                    <input type="text" class="form-control text-center fw-bold" readonly name="technique" id="catA"> 
+                    <label>Technique</label>
+                </div>
+                <div class="col-md-3 text-center fw-bold">
+                    <input type="text" class="form-control text-center fw-bold" readonly name="artistry" id="catB"> 
+                    <label>Artistry</label>
+                </div>
+                <div class="col-md-3 text-center fw-bold">
+                    <input type="text" class="form-control text-center fw-bold" readonly name="musicality" id="catC"> 
+                    <label>Musicality</label>
+                </div>
+                <div class="col-md-3 text-center fw-bold">
+                    <input type="text" class="form-control text-center fw-bold" readonly name="costume" id="catD">
+                    <label>Costume</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center fw-bold">
+                    <input type="text" name="score" readonly id="score" class="confirmScore form-control">
+                    <label class="fs-1">Score</label>
+                </div>
+            </div>
         </form>
 
         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Log;
+use FFMpeg;
 
 class UploadController extends Controller
 {
@@ -21,7 +22,7 @@ class UploadController extends Controller
         $file = $request->file;
         $entry = $request->input('entryCode');
         $cat = $request->input('catCode');
-        $date = date('Y-m-d_H.i.s');
+        $date = date('Y-m-d-H.i.s');
         $judge = '';
 
         switch ($request->input('judge')) {
@@ -36,11 +37,25 @@ class UploadController extends Controller
             break;
         }
 
-        $filename = 'e-' . $entry . '-cat-' . $cat . 'judge_' . $judge . '-' . $date . '.wav';
+        $filename = $entry . '_' . $cat . '_' . 'judge' . '-' . $judge . '_' . $date . '.wav';
+        $fname = $entry . '_' . $cat . '_' . 'judge' . '-' . $judge . '_' . $date . '.mp3';
 
         $file->move(public_path('storage'), $filename);
 
-        return back()->with('success', 'File uploaded')->with('file', $filename);  
+        try {
+            FFMpeg::fromDisk('audio')
+                ->open('/storage/' . $filename)
+                ->export()
+                ->toDisk('audio')
+                ->inFormat(new FFMpeg\Format\Audio\Mp3)
+                ->save('/storage/converted/' .  $fname);
+
+            Log:info(public_path('storage') . '/' . $filename);
+            return back()->with('success', 'File uploaded')->with('file', $fname);  
+        } catch (EncodingException $exception) {
+            $command = $exception->getCommand();
+            $errorLog = $exception->getErrorOutput();
+        }
     }
 
     /**

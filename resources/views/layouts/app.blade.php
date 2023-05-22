@@ -155,6 +155,9 @@
                             <li class="nav-item w-100">
                                 <a class="nav-link" href="{{ route('ranking') }}"><i class="material-icons">star</i> Rankings</a>
                             </li>
+                            <li class="nav-item w-100">
+                                <a class="nav-link" href="{{ route('recordings') }}"><i class="material-icons">record_voice_over</i> Recordings</a>
+                            </li>
                             @endif
                         @endauth
                     </ul>
