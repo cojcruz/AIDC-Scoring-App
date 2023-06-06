@@ -34,6 +34,7 @@ return [
         */
         'csv'                    => [
             'delimiter'              => ',',
+            'input_encoding'         => 'ISO-8859-1',
             'enclosure'              => '"',
             'line_ending'            => PHP_EOL,
             'use_bom'                => false,
@@ -73,7 +74,7 @@ return [
             'enclosure'              => '"',
             'escape_character'       => '\\',
             'contiguous'             => false,
-            'input_encoding'         => 'UTF-8',
+            'input_encoding'         => 'ISO-8859-1',
         ],
     ],
 

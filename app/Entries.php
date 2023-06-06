@@ -10,6 +10,7 @@ class Entries extends Model
         'code', 
         'entry_school',
         'entry_name',
+        'age',
         'category',
     ];
 }

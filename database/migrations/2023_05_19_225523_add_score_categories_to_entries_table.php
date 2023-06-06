@@ -14,18 +14,18 @@ return new class extends Migration
     public function up()
     {
         Schema::table('entries', function (Blueprint $table) {
-            $table->string('jA-catD')->after('judge_a')->nullable();
-            $table->string('jA-catC')->after('judge_a')->nullable();
-            $table->string('jA-catB')->after('judge_a')->nullable();
-            $table->string('jA-catA')->after('judge_a')->nullable();
-            $table->string('jB-catD')->after('judge_b')->nullable();
-            $table->string('jB-catC')->after('judge_b')->nullable();
-            $table->string('jB-catB')->after('judge_b')->nullable();
-            $table->string('jB-catA')->after('judge_b')->nullable();
-            $table->string('jC-catD')->after('judge_c')->nullable();
-            $table->string('jC-catC')->after('judge_c')->nullable();
-            $table->string('jC-catB')->after('judge_c')->nullable();
-            $table->string('jC-catA')->after('judge_c')->nullable();
+            $table->string('jAcatD')->after('judge_a')->nullable();
+            $table->string('jAcatC')->after('judge_a')->nullable();
+            $table->string('jAcatB')->after('judge_a')->nullable();
+            $table->string('jAcatA')->after('judge_a')->nullable();
+            $table->string('jBcatD')->after('judge_b')->nullable();
+            $table->string('jBcatC')->after('judge_b')->nullable();
+            $table->string('jBcatB')->after('judge_b')->nullable();
+            $table->string('jBcatA')->after('judge_b')->nullable();
+            $table->string('jCcatD')->after('judge_c')->nullable();
+            $table->string('jCcatC')->after('judge_c')->nullable();
+            $table->string('jCcatB')->after('judge_c')->nullable();
+            $table->string('jCcatA')->after('judge_c')->nullable();
         });
     }
 
@@ -37,18 +37,18 @@ return new class extends Migration
     public function down()
     {
         Schema::table('entries', function (Blueprint $table) {
-            $table->dropColumn(['jA-catA']);
-            $table->dropColumn(['jA-catB']);
-            $table->dropColumn(['jA-catC']);
-            $table->dropColumn(['jA-catD']);
-            $table->dropColumn(['jB-catA']);
-            $table->dropColumn(['jB-catB']);
-            $table->dropColumn(['jB-catC']);
-            $table->dropColumn(['jB-catD']);
-            $table->dropColumn(['jC-catA']);
-            $table->dropColumn(['jC-catB']);
-            $table->dropColumn(['jC-catC']);
-            $table->dropColumn(['jC-catD']);
+            $table->dropColumn(['jAcatA']);
+            $table->dropColumn(['jAcatB']);
+            $table->dropColumn(['jAcatC']);
+            $table->dropColumn(['jAcatD']);
+            $table->dropColumn(['jBcatA']);
+            $table->dropColumn(['jBcatB']);
+            $table->dropColumn(['jBcatC']);
+            $table->dropColumn(['jBcatD']);
+            $table->dropColumn(['jCcatA']);
+            $table->dropColumn(['jCcatB']);
+            $table->dropColumn(['jCcatC']);
+            $table->dropColumn(['jCcatD']);
         });
     }
 };

@@ -33,6 +33,8 @@ Route::post('/scoring', 'ScoringController@validate')->name('scoring.check');
 
 Route::post('/scoring/save', 'ScoringController@saveScore')->name('savescore');
 
+Route::post('/scoring/validate', 'ScoringController@checkScores')->name('score.validation');
+
 Route::get('/scoring/active', 'ActiveEntryController@index')->name('scoring.active');
 
 Route::get('/dashboard/admin/find', 'AdminController@findEntry')->name('find.entry');

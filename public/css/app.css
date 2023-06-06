@@ -12615,7 +12615,8 @@ body:before {
   z-index: -1;
   opacity: 0.3;
   background: url("/images/cbap_logo.png") no-repeat center fixed #fff;
-  background-size: 60%;
+  background-size: contain;
+  transition: all 0.7s;
 }
 
 body #Entry,
@@ -12780,5 +12781,9 @@ body #app main #rankings_wrapper #rankings_filter {
 
 body #app main #rankings_wrapper #rankings_filter {
   text-align: right;
+}
+
+body.showBg:before {
+  opacity: 1;
 }
 

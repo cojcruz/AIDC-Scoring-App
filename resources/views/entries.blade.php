@@ -235,6 +235,7 @@
                         <th scope="col" class="d-none">Active</th>               
                         <th scope="col" class="col-2">Entry</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Age</th>
                         <th scope="col">School</th>
                         <th scope="col">Category</th>
                         <th scope="col">Scores</th>
@@ -266,6 +267,9 @@
                                 {{ $entry->entry_name }}
                             </td>
                             <td>
+                                {{ round($entry->age, 2) }}
+                            </td>
+                            <td>
                                 {{ $entry->entry_school }}
                             <td>
                                 {{ $entry->category }}
@@ -273,7 +277,7 @@
                             <td class="entryScores">
                                 <div class="row">
                                     <div class="col text-center">
-                                        <h6>{{ $entry->judge_a }}</h6>
+                                        <h6>{{ $entry->judge_a }}</h6>                                        
                                         <strong>Judge A</strong>
                                     </div>
                                     <div class="col text-center">

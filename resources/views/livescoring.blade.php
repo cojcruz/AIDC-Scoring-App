@@ -2,6 +2,37 @@
 
 @section('appScript')
 <script src="{{ asset('js/live_app.js') }}" defer></script>
+@if ( $layout == 'active' )
+<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+<script>
+    jQuery(function($) {
+        $(document).ready(function(){
+            $('#nowPerforming').delay(3000).fadeOut();
+
+            setInterval( function() {
+                $('body').addClass('showBg');
+            }, 3000);
+
+            setInterval( function() {
+                $.ajax({
+                    type    : "POST",
+                    url     : '{{ route('score.validation') }}',
+                    data    : { 
+                        _token  : '{{ csrf_token() }}', 
+                        code    : '{{ $code }}'
+                    },
+                    success : function(response) {
+                        window.location.reload();                    
+                    },
+                    error   : function(response) {
+                        console.log('no scores entered yet.');
+                    }
+                });
+            }, 10000);
+        })
+    });
+</script>
+@endif
 @endsection
 
 @section('content')
@@ -42,21 +73,16 @@
             </card>
         </div>
         @elseif ( $layout == 'active' )
-        <div class="col-md-12 my-auto">
+        <div id="nowPerforming" class="col-md-12 my-auto">
             <card title="Now Performing" class="shadow-lg">
                 <div class="row justify-content-center">
                     <div class="col-lg-3 text-end">
                         <img src="{{ asset('images/cbap_logo.png') }}" class="rounded img-fluid">
                     </div>
                     <div class="col-lg-9 d-flex align-items-center">
-                        <h1 class="display-1 text-primary w-100 text-center font-weight-bold" style="font-size: 1000%;text-shadow: 3px 3px 3px rgba(0,0,0,.25);">Entry <span style="font-size: 50%; vertical-align: middle;">#</span>{{ $code }}</h1>
+                        <h1 class="display-1 text-primary w-100 text-center font-weight-bold" style="font-size: 1000%;text-shadow: 3px 3px 3px rgba(0,0,0,.25);">Entry <span style="font-size: 50%; vertical-align: middle;">#</span>{{ substr($code, 2) }}</h1>
                     </div>
-                
-                <script>
-                    setInterval( function() {
-                        window.location.reload();
-                    }, 15000);
-                </script>
+                </div>
             </card>
         </div>
         @elseif ( $layout == 'showscores' )
@@ -70,7 +96,7 @@
                         <div class="col-md-8">
                             <h2 class="text-primary display-3 text-end">{{ $entry->entry_name }}</h2>
                             <h4 class="display-6 text-end">{{ $category->name }} | {{ $category->code }}</h4>  
-                            <h4 class="display-6 text-end w-100" style="font-weight: bold; top: 100px; left: 0;">Entry <span style="font-size: 75%;">#</span>{{ $code }}</h4>                          
+                            <h4 class="display-6 text-end w-100" style="font-weight: bold; top: 100px; left: 0;">Entry <span style="font-size: 75%;">#</span>{{ substr($code, 2) }}</h4>                          
                         </div>
                     </div>
                 </div>
@@ -84,7 +110,7 @@
                     <div class="card-group">
                         @foreach ( $judges as $judge )                        
                         <div class="card text-center border border-black">
-                            <h5 class="card-title bg-primary display-6 text-white py-2">Judge {{ $i++ }}</h5>
+                            <h5 class="card-title bg-primary display-6 text-white py-2">Judge</h5>
 
                             <div class="card-body py-5">
                                 <h2 class="score display-3">{{ $judge }}</h2>

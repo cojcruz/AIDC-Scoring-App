@@ -13,7 +13,7 @@
 <script>
     jQuery( function($) {
         var rankings = $('#rankings').DataTable({
-            'order' : [[7, 'desc']],
+            'order' : [[19, 'desc']],
             'scrollCollapse' : true,
             'columnDefs' : [
                 {
@@ -30,9 +30,11 @@
                 filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
             },{
                 extend: 'pdf',
+                orientation: 'landscape',
                 filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
             },{
                 extend: 'print',
+                orientation: 'landscape',
                 filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
             }]
         });
@@ -103,14 +105,26 @@
                     <div class="card-body">
                         <table id="rankings" class="table">
                             <thead class="thead-light">    
-                                <th scope="col">Category</th>            
-                                <th scope="col">Entry</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">School</th>
-                                <th scope="col">Judge A</th>
-                                <th scope="col">Judge B</th>
-                                <th scope="col">Judge C</th>
-                                <th scope="col">Average</th>
+                                <th scope="col" class="text-center">Category</th>            
+                                <th scope="col" class="text-center">Entry</th>
+                                <th scope="col" class="text-center" style="width: 15%;">Name</th>
+                                <th scope="col" class="text-center" style="width: 15%;">School</th>
+                                <th scope="col" class="text-center">Judge 1</th>
+                                <th scope="col" class="text-center fs-6">A</th>
+                                <th scope="col" class="text-center fs-6">B</th>
+                                <th scope="col" class="text-center fs-6">C</th>
+                                <th scope="col" class="text-center fs-6">D</th>
+                                <th scope="col" class="text-center">Judge 2</th>
+                                <th scope="col" class="text-center fs-6">A</th>
+                                <th scope="col" class="text-center fs-6">B</th>
+                                <th scope="col" class="text-center fs-6">C</th>
+                                <th scope="col" class="text-center fs-6">D</th>
+                                <th scope="col" class="text-center">Judge 3</th>
+                                <th scope="col" class="text-center fs-6">A</th>
+                                <th scope="col" class="text-center fs-6">B</th>
+                                <th scope="col" class="text-center fs-6">C</th>
+                                <th scope="col" class="text-center fs-6">D</th>
+                                <th scope="col" class="text-center">Average</th>
                             </thead>
                             <tbody>
                                 @foreach ( $entries as $entry )
@@ -124,7 +138,7 @@
                                         {{ $entry->category }}
                                     </td>
                                     <td>
-                                        {{ $entry->code }}
+                                        {{ substr($entry->code, 2) }}
                                     </td>
                                     <td>
                                         {{ $entry->entry_name }}
@@ -132,28 +146,66 @@
                                     <td>
                                         {{ $entry->entry_school }}
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if ( $entry->judge_a )
-                                            {{ $entry->judge_a }}
+                                            <strong>{{ $entry->judge_a }}</strong>
                                         @else 
                                             No Score
                                         @endif
                                     </td>
                                     <td>
+                                        {{ $entry->jAcatA }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->jAcatB }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->jAcatC }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->jAcatD }}
+                                    </td>
+                                    <td class="text-center">
                                         @if ( $entry->judge_b )
-                                            {{ $entry->judge_b }}
+                                            <strong>{{ $entry->judge_b }}</strong>
                                         @else 
                                             No Score
                                         @endif
                                     </td>
                                     <td>
+                                        {{ $entry->jBcatA }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->jBcatB }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->jBcatC }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->jBcatD }}
+                                    </td>
+                                    <td class="text-center">
                                         @if ( $entry->judge_c )
-                                            {{ $entry->judge_c }}
+                                            <strong>{{ $entry->judge_c }}</strong>
                                         @else 
                                             No Score
                                         @endif
                                     </td>
-                                    <td>{{ $average }}</td>
+                                    <td>
+                                        {{ $entry->jCcatA }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->jCcatB }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->jCcatC }}
+                                    </td>
+                                    <td>
+                                        {{ $entry->jCcatD }}
+                                    </td>
+                                    <td class="fw-bold">
+                                        {{ $average }}
+                                    </td>
                                 </tr>
 
                                 @endforeach

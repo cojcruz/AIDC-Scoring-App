@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\DB;
 use App\Scores;
 use App\Entries;
@@ -147,10 +148,10 @@ class ScoringController extends Controller
             DB::table('entries')
                 ->where('code', $entryCode)
                 ->update([
-                    'j' . strtoupper($judge) . '-catA' => $catA,
-                    'j' . strtoupper($judge) . '-catB' => $catB,
-                    'j' . strtoupper($judge) . '-catC' => $catC,
-                    'j' . strtoupper($judge) . '-catD' => $catD,
+                    'j' . strtoupper($judge) . 'catA' => $catA,
+                    'j' . strtoupper($judge) . 'catB' => $catB,
+                    'j' . strtoupper($judge) . 'catC' => $catC,
+                    'j' . strtoupper($judge) . 'catD' => $catD,
                     'judge_' . $judge => $score,
                 ]);
 
@@ -169,5 +170,22 @@ class ScoringController extends Controller
 
             return view('error', $data);
         endif;
+    }
+
+    public function checkScores(Request $request) {
+        $activeEntry = DB::table('entries')
+            ->select('*')
+            ->where('code', $request->input('code'))->first();        
+        $scoresEntered = isset($activeEntry->judge_a) && isset($activeEntry->judge_b) && isset($activeEntry->judge_c) ? true : false;
+
+        if ($scoresEntered) {
+            return Response::json([ 
+                'success' => true
+            ], 200);
+        } else {
+            return Response::json([
+                'success' => false
+            ], 400);
+        }
     }
 }
