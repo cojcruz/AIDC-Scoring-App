@@ -188,4 +188,35 @@ class ScoringController extends Controller
             ], 400);
         }
     }
+
+    public function checkActive(Request $request) {
+        $activeEntry = DB::table('active_entry')
+            ->select("*")->first();
+
+        if (isset($activeEntry->code)) {
+            return Response::json([
+                'success' => true
+            ], 200);
+        } else {
+            return Response::json([
+                'success' => false
+            ], 400);
+        }
+    }
+
+    public function validateEntry(Request $request) {
+        $activeEntry = DB::table('active_entry')
+            ->select("*")->first();
+        $code = $request->input('code');
+
+        if ($activeEntry->code == $code ) {
+            return Response::json([
+                'success' => true 
+            ], 200 );
+        } else {
+            return Response::json([
+                'success' => false 
+            ], 400 );
+        }
+    }
 }

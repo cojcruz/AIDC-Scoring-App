@@ -2,8 +2,9 @@
 
 @section('appScript')
 <script src="{{ asset('js/live_app.js') }}" defer></script>
-@if ( $layout == 'active' )
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+
+@if ( $layout == 'active' )
 <script>
     jQuery(function($) {
         $(document).ready(function(){
@@ -60,15 +61,35 @@
         @if ( $layout == 'standby' )   
         <div class="col-md-8 my-auto">
             <card title="Live Scoring">
-                <h2 style="align-middle">
+                <!-- <h2 style="align-middle">
                     <div class="spinner-grow text-primary" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div> 
-                    No Active Entry</h2>
+                    No Active Entry</h2> -->
                 <script>
-                    setInterval( function() {
-                        window.location.reload();
-                    }, 10000);
+                    jQuery( function($) {
+                        $(document).ready( function() {
+                            function checkActive() {
+                                $.ajax({
+                                    type    : 'POST',
+                                    url     : "{{ route('livescoring.checkActive') }}",
+                                    data    : {
+                                        _token : "{{ csrf_token() }}",
+                                    },
+                                    success : function( request ) {
+                                        window.location.reload();
+                                    },
+                                    error   : function( request ) {
+                                        setTimeout( checkActive , 2000 );
+                                    }
+                                })
+                            }
+
+                            checkActive();
+
+                            $('body').addClass('showBg');
+                        });
+                    });
                 </script>
             </card>
         </div>
@@ -107,23 +128,25 @@
                         shuffle($judges);
                         $i = 1;
                     @endphp
-                    <div class="card-group">
-                        @foreach ( $judges as $judge )                        
-                        <div class="card text-center border border-black">
-                            <h5 class="card-title bg-primary display-6 text-white py-2">Judge</h5>
-
-                            <div class="card-body py-5">
-                                <h2 class="score display-3">{{ $judge }}</h2>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
                     @php
                         $average = round( ( (int)$entry->judge_a + (int)$entry->judge_b + (int)$entry->judge_c) / 3, 2); // Compute for Average Score
+                        $average <= 65 ? $average = 65 : $average;
                     @endphp
                     <div class="card-footer border text-bg-primary">
                         <h4 class="fw-bold text-center display-5">Average</h4>
                         <h2 class="score h1 display-1 text-center">{{ $average }}</h2>
+                    </div>
+                    <div class="card-group">
+                        @foreach ( $judges as $judge )                        
+                        <div class="card text-center border border-black">
+
+                            <div class="card-body py-5">
+                                <h2 class="score display-3">{{ (int)$judge <= 65 ? 65 : $judge }}</h2>
+                            </div>
+
+                            <h5 class="card-title bg-primary display-6 text-white py-0 my-0">Judge</h5>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

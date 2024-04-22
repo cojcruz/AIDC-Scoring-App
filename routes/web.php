@@ -35,6 +35,10 @@ Route::post('/scoring/save', 'ScoringController@saveScore')->name('savescore');
 
 Route::post('/scoring/validate', 'ScoringController@checkScores')->name('score.validation');
 
+Route::post('/scoring/checkActive', 'ScoringController@checkActive')->name('score.checkActive');
+
+Route::post('/scoring/validateEntry', 'ScoringController@validateEntry')->name('score.validateEntry');
+
 Route::get('/scoring/active', 'ActiveEntryController@index')->name('scoring.active');
 
 Route::get('/dashboard/admin/find', 'AdminController@findEntry')->name('find.entry');
@@ -50,6 +54,8 @@ Route::get('/dashboard/admin/clear/{id}', 'AdminController@deactivateEntry')->na
 Route::get('/dashboard/admin/getactive', 'AdminController@getActive')->name('get.active');
 
 Route::get('/dashboard/livescoring', 'LiveScoringController@index')->name('livescoring');
+
+Route::post('/dashboard/livescoring/check', 'LiveScoringController@checkActive')->name('livescoring.checkActive');
 
 Route::get('/dashboard/ranking', 'RankingController@index')->name('ranking');
 

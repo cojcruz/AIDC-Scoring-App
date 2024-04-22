@@ -31,8 +31,8 @@ class EntriesImport implements ToModel, WithStartRow, WithCustomCsvSettings
             'category'  => $row[0],
             'code'  => $row[1],
             'entry_name' => $row[2],
-            'age' => $row[3],
-            'entry_school' => $row[4],
+            'age' => $row[4],
+            'entry_school' => $row[3],
             'created_at' => Carbon::now(),
         ]);
     }
