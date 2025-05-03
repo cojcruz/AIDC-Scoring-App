@@ -12,7 +12,8 @@
 <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
 <script>
     jQuery( function($) {
-        var rankings = $('#rankings').DataTable({
+        let date = new Date();
+        let rankings = $('#rankings').DataTable({
             'order' : [[19, 'desc']],
             'scrollCollapse' : true,
             'columnDefs' : [
@@ -24,18 +25,18 @@
             dom: 'Bfrtip',
             buttons: [{
                 extend: 'csv',
-                filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
+                filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
             },{
                 extend: 'excel',
-                filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
+                filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
             },{
                 extend: 'pdf',
                 orientation: 'landscape',
-                filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
+                filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
             },{
                 extend: 'print',
                 orientation: 'landscape',
-                filename: 'ABAP Competition 2023 - Ranking for {{ $cat }}',
+                filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
             }]
         });
 

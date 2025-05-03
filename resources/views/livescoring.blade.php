@@ -29,7 +29,7 @@
                         console.log('no scores entered yet.');
                     }
                 });
-            }, 10000);
+            }, 500);
         })
     });
 </script>
@@ -107,6 +107,29 @@
             </card>
         </div>
         @elseif ( $layout == 'showscores' )
+        <script>
+            jQuery( function($) {
+                $(document).ready(function(){
+                    setInterval( function() {
+                        $.ajax({
+                            type    : "POST",
+                            url     : '{{ route('livescoring.checkActive') }}',
+                            data    : { 
+                                _token  : '{{ csrf_token() }}', 
+                                code    : '{{ $code }}',
+                                scores  : true
+                            },
+                            success : function(response) {
+                                window.location.reload();                    
+                            },
+                            error   : function(response) {
+                                console.log('no scores entered yet.');
+                            }
+                        });
+                    }, 500);
+                })
+            });
+        </script>
         <div class="col-md-12 my-auto w-100">
             <div class="card h-100 rounded shadow-lg">
                 <div class="card-header bg-light">

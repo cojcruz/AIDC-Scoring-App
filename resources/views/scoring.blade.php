@@ -139,7 +139,7 @@
 
                         console.log('test')
 
-                        oReq.open('POST', '{{ route('upload.recording') }}', true);
+                        oReq.open('POST', '{{ route('upload.recording') }}', false);
                         oReq.onload = function( oEvent ) {
                             //
                         }
