@@ -36,10 +36,14 @@ class EntriesController extends Controller
         $categories = DB::table('categories')
             ->select('*')
             ->orderBy('id')->get();
+        $activeCat = DB::table('active_category')
+            ->select('*')
+            ->where('id', 1)->first();
 
         $data = [
             'entries' => $entries,
             'activeEntry' => $activeEntry,
+            'activeCategory' => $activeCat->code,
             'schools' => $schools,
             'categories' => $categories,
         ];
@@ -96,7 +100,7 @@ class EntriesController extends Controller
         $code = $request->input('entryCode');
         $name = $request->input('entryName');
         $school = $request->input('entrySchool');
-        $category = $request->input('categoryCode');
+        $category = $request->input('entryCategory');
         $status = '';
 
         try {

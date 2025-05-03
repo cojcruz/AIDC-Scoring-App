@@ -18,3 +18,8 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/live_app.js', 'public/js')
     .js('resources/js/scoring_app.js','public/js')
     .js('resources/js/judgescoring_app.js','public/js');
+ module.exports = {
+    resolve: {
+        extensions: ['*', '.js', '.vue', '.json']
+    }
+ }

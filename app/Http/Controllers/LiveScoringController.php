@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
+use App\Scores;
+use App\Entries;
 use Log;
+use Auth;
 
 class LiveScoringController extends Controller
 {
@@ -79,5 +83,20 @@ class LiveScoringController extends Controller
         ];
 
         return view('livescoring', $data);
+    }
+
+    public function checkActive( Request $request ) {
+        $activeEntry = DB::table('active_entry')
+            ->select("*")->first();
+
+        if (isset($activeEntry->code)) {
+            return Response::json([
+                'success' => true
+            ], 200);
+        } else {
+            return Response::json([
+                'success' => false
+            ], 400);
+        }
     }
 }

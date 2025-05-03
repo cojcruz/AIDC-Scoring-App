@@ -14,6 +14,9 @@
         #app main > .row {
             align-items: center;
         }
+        #app main .fineTune {
+            font-weight: bold;
+        }
     </style>
     <script src="{{ asset('js/jquery.stopwatch.js') }}"></script>
     <script>
@@ -24,33 +27,84 @@
                 let catC = 0;
                 let catD = 0;
 
+                // Fine Tune Scores
+                $('.fineTune').on("click", function() {
+                    let func = $(this).data("function");
+                    let target = $("#" + $(this).data('target'));
+                    let value = target.val();
+
+                    if ( func == "add" ) {
+                        target.val(++value).trigger('input');
+                    }
+                    if ( func == "sub" ) {
+                        target.val(--value).trigger('input');
+                    }
+                });
+
                 $('#technique').on('input', function() {
                     $('#techNumber').html($(this).val());
                     catA = Number($(this).val());
                     sumUp();
                 });
+
                 $('#artistry').on('input', function() {
                     $('#artNumber').html($(this).val());
                     catB = Number($(this).val());
                     sumUp();
                 });
+                
                 $('#musicality').on('input', function() {
                     $('#musicNumber').html($(this).val());
                     catC = Number($(this).val());
                     sumUp();
                 });
+                
                 $('#costume').on('input', function() {
                     $('#costNumber').html($(this).val());
                     catD = Number($(this).val());
                     sumUp();
                 });
 
+
+                // Add up all categories 
                 function sumUp() {
                     let score = catA + catB + catC + catD;
                     
                     $('#totalScore').val(score);
                 }
 
+                // Checksum if active entry is correct
+                let i = 0;
+                
+                function validateEntry() {
+                    $.ajax({
+                        type: 'POST',
+                        data: {
+                            _token  : '{{ csrf_token() }}',
+                            code    : '{{ $entrycode->code }}',
+                        },
+                        url: "{{ route('score.validateEntry') }}",
+                        success: function( data ) {
+                            console.log('success');                                
+                            if ( i <= 15 ) {
+                                ++i;
+
+                                setTimeout( validateEntry, 2000 );
+                            } else {
+                                console.log('validation done');
+                            }
+                        }, 
+                        error: function() {
+                            console.log('failure');
+                            window.location.reload();                                
+                        }, 
+                        dataType: 'json'
+                    });
+                }
+
+                validateEntry();
+
+                // Voice Recording Script
                 let complete = false;
 
                 @if ( !$check )
@@ -58,7 +112,7 @@
 
                 $(window).bind('beforeunload', function() {
                     if ( !complete ) {
-                        return "Leaving would loss existing voice recording.";
+                        return "Leaving would lose existing voice recording.";
                     }
                 });
 
@@ -85,7 +139,7 @@
 
                         console.log('test')
 
-                        oReq.open('POST', '{{ route('upload.recording') }}', true);
+                        oReq.open('POST', '{{ route('upload.recording') }}', false);
                         oReq.onload = function( oEvent ) {
                             //
                         }
@@ -134,9 +188,35 @@
     @else 
 
     <script>
-        setInterval(function() {
-            window.location.reload();
-        }, 2000);
+        // setInterval(function() {
+        //     window.location.reload();
+        // }, 2000);
+
+        jQuery( function($) {
+            $(document).ready( function() {
+                function checkActive() {
+                    setInterval( function() {
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ route('score.checkActive') }}",
+                            data: {
+                                _token : '{{ csrf_token() }}',
+                            },
+                            success: function( data ) {
+                                console.log('success');
+                                window.location.reload();
+                            }, 
+                            error: function() {
+                                console.log('failure');                               
+                            }, 
+                            dataType: 'json'
+                        })
+                    }, 2000);
+                }
+
+                checkActive();
+            });
+        })
     </script>
 
     @endif
@@ -152,7 +232,7 @@
                         Live Scoring
                     @else
                         <span class="d-block mx-auto text-primary">Category: <span class="text-secondary">{{ $catcode }}</span></span>
-                        Entry <span style="font-size: 50%;" class="d-inline-block">#</span>{{ $entrycode->code }}                            
+                        Entry <span style="font-size: 50%;" class="d-inline-block">#</span>{{ substr($entrycode->code, 2) }}                            
                     @endif
                 </h5>
             </div>
@@ -173,24 +253,31 @@
 
                     @if ( !$check )
                         <div class="row justify-content-center">
-                            <div class="col-md-6 mx-auto">
+                            <div class="col-md-10 mx-auto">
                                 <div class="mx-auto text-center w-100">
                                     <h6 class="display-6 d-inline-block">
-                                        <div class="spinner-grow text-danger" role="status"><span class="visually-hidden">Loading...</span></div> Recording (
-                                        <div class="d-inline-block" id="stopwatch">00:00:00</div>
-                                        )
+                                        <div class="spinner-grow text-danger" role="status"><span class="visually-hidden">
+                                            Loading...</span>
+                                        </div> 
+                                        Recording ( <div class="d-inline-block" id="stopwatch">00:00:00</div> )
                                     </h6>
                                 </div>
                                 <form method="post" id="entryscore">
                                     <div class="row">
                                         <div class="col-md-6 p-4">
-                                            <div class="row mb-1 align-items-center">
+                                            <div class="row mb-1 align-items-center" >
                                                 <div class="col-md-8">
-                                                    <label for="technique" class="display-6">Technique</label>
+                                                    <label for="technique" class="display-6">Technique</label>                                                    
                                                     <input type="range" min="0" max="40" value="0" name="technique" class="w-100 slider form-range mt-2 d-block" id="technique">
+                                                    
+                                                    <div class="btn-group w-100 my-3" role="group">
+                                                        <input class="btn btn-info fineTune w-25 d-inline-block" data-function="sub" data-target="technique" type=button value="-">
+                                                        <input class="btn btn-primary fineTune w-25 d-inline-block" data-function="add" data-target="technique" type=button value="+">
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-4 text-center">
-                                                    <div id="techNumber" class="display-6 border scorelabel py-2">0</div>
+                                                    <div id="techNumber" class="display-5 border scorelabel py-2">0</div>
+                                                    <sub class="text-center d-block mt-2">Max Score of 40</sub>
                                                 </div>
                                             </div>
                                         </div>
@@ -199,9 +286,15 @@
                                                 <div class="col-md-8">
                                                     <label for="artistry" class="display-6">Artistry</label>
                                                     <input type="range" min="0" max="40" value="0" name="artistry" class="w-100 slider form-range mt-2 d-block" id="artistry">
+                                                   
+                                                    <div class="btn-group w-100 my-3" role="group">
+                                                        <input class="btn btn-info fineTune w-25 d-inline-block" data-function="sub" data-target="artistry" type=button value="-">
+                                                        <input class="btn btn-primary fineTune w-25 d-inline-block" data-function="add" data-target="artistry" type=button value="+">
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-4 text-center">
-                                                    <div id="artNumber" class="display-6 border scorelabel py-2">0</div>
+                                                    <div id="artNumber" class="display-5 border scorelabel py-2">0</div>
+                                                    <sub class="text-center d-block mt-2">Max Score of 40</sub>
                                                 </div>
                                             </div>
                                         </div>
@@ -212,9 +305,14 @@
                                                 <div class="col-md-8">
                                                     <label for="musicality" class="display-6">Musicality</label>
                                                     <input type="range" min="0" max="15" value="0" name="musicality" class="w-100 slider form-range mt-2 d-block" id="musicality">
+                                                    <div class="btn-group w-100 my-3" role="group">
+                                                        <input class="btn btn-info fineTune w-25 d-inline-block" data-function="sub" data-target="musicality" type=button value="-">
+                                                        <input class="btn btn-primary fineTune w-25 d-inline-block" data-function="add" data-target="musicality" type=button value="+">
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-4 text-center">
-                                                    <div id="musicNumber" class="display-6 border scorelabel py-2">0</div>
+                                                    <div id="musicNumber" class="display-5 border scorelabel py-2">0</div>
+                                                    <sub class="text-center d-block mt-2">Max Score of 15</sub>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,19 +321,24 @@
                                                 <div class="col-md-8">
                                                     <label for="costume" class="display-6">Costume</label>
                                                     <input type="range" min="0" max="5" value="0" name="costume" class="w-100 slider form-range mt-2 d-block" id="costume">
+                                                    <div class="btn-group w-100 my-3" role="group">
+                                                        <input class="btn btn-info fineTune w-25 d-inline-block" data-function="sub" data-target="costume" type=button value="-">
+                                                        <input class="btn btn-primary fineTune w-25 d-inline-block" data-function="add" data-target="costume" type=button value="+">
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-4 text-center">
-                                                    <div id="costNumber" class="display-6 border scorelabel py-2">0</div>
+                                                    <div id="costNumber" class="display-5 border scorelabel py-2">0</div>
+                                                    <sub class="text-center d-block mt-2">Max Score of 5</sub>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row mb-5">
                                         <div class="col-md-8">
-                                            <label for="totalScore" class="display-6">Total Score</label>
+                                            <label for="totalScore" class="display-4">Total Score</label>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="text" maxlength="5" name="totalScore" id="totalScore" class="display-6 float-end w-100 text-center" value="0" readonly />
+                                            <input type="text" maxlength="5" name="totalScore" id="totalScore" class="display-2 float-end w-100 text-center" value="0" readonly />
                                         </div>
                                     </div>
                                 </form>
@@ -252,7 +355,7 @@
                         <script>
                             setInterval(function() {
                                 window.location.reload();
-                            }, 5000);
+                            }, 2000);
                         </script>
                     @endif
 

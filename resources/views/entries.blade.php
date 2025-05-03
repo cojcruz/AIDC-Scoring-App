@@ -7,7 +7,7 @@
 <script src="{{ asset('js/datatables.min.js') }}"></script>
 <script defer>
     jQuery( function($) {
-        var entriesTable = $('#entries').DataTable({
+        let entriesTable = $('#entries').DataTable({
             'order' : [[0, 'desc']],
             'scrollCollapse' : true,
             'columnDefs' : [
@@ -16,6 +16,8 @@
                     'targets' : '_all'
                 }
             ],
+            "oSearch" : { 'sSearch' : "{{ $activeCategory }}"},
+            'pageLength' : 25,
         });
 
         entriesTable.on('draw', function() {
@@ -244,7 +246,7 @@
                     <tbody>
                         @foreach ( $entries as $entry )
                         
-                        <tr>
+                        <tr @if ($activeCategory != $entry->category) echo 'class="d-none"' @endif>
                             <th class="d-none">
                                 @if ( $activeEntry->code  == $entry->code )
                                     1
