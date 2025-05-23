@@ -22,53 +22,63 @@
     <script>
         jQuery( function($) {
             $(document).ready(function() {
-                let catA = 0;
-                let catB = 0;
-                let catC = 0;
-                let catD = 0;
+                let catA = 65;
+                let catB = 65;
+                let catC = 65;
+                let catD = 65;
 
                 // Fine Tune Scores
                 $('.fineTune').on("click", function() {
                     let func = $(this).data("function");
                     let target = $("#" + $(this).data('target'));
-                    let value = target.val();
+                    let value = new Number( target.val() );
+                    let step = new Number( 0.05 );
+                    let newValue = func == "add" ? value + step : value - step;
 
-                    if ( func == "add" ) {
-                        target.val(++value).trigger('input');
-                    }
-                    if ( func == "sub" ) {
-                        target.val(--value).trigger('input');
-                    }
+                    target.val( newValue ).trigger('input');
+
                 });
 
                 $('#technique').on('input', function() {
-                    $('#techNumber').html($(this).val());
-                    catA = Number($(this).val());
+                    let score = Number( $(this).val() ).toFixed(2);
+
+                    $('#techNumber').html( score ) ;
+                    catA = new Number( score );
+                    
                     sumUp();
                 });
 
                 $('#artistry').on('input', function() {
-                    $('#artNumber').html($(this).val());
-                    catB = Number($(this).val());
+                    let score = Number( $(this).val() ).toFixed(2);
+
+                    $('#artNumber').html( score ) ;
+                    catB = new Number( score );
+                    
                     sumUp();
                 });
                 
                 $('#musicality').on('input', function() {
-                    $('#musicNumber').html($(this).val());
-                    catC = Number($(this).val());
+                    let score = Number( $(this).val() ).toFixed(2);
+
+                    $('#musicNumber').html( score ) ;
+                    catC = new Number( score );
+                    
                     sumUp();
                 });
                 
                 $('#costume').on('input', function() {
-                    $('#costNumber').html($(this).val());
-                    catD = Number($(this).val());
+                    let score = Number( $(this).val() ).toFixed(2);
+
+                    $('#costNumber').html( score ) ;
+                    catD = new Number( score );
+
                     sumUp();
                 });
 
 
                 // Add up all categories 
                 function sumUp() {
-                    let score = catA + catB + catC + catD;
+                    let score = new Number( ( catA * 0.4 ) + ( catB * 0.4 ) + ( catC * 0.15 ) + ( catD * 0.05 ) ).toFixed( 2 );
                     
                     $('#totalScore').val(score);
                 }
@@ -153,16 +163,16 @@
                     let entry;                    
 
                     $('#submit').click( function() {
-                        if ( Number($('#totalScore').val()) > 0 ) {
+                        if ( Number($('#totalScore').val()) > 65 ) {
                             entry = $('#totalScore').val();
                             $('#confirmScore').modal('show');
-                            $('#catA').val(catA);
-                            $('#catB').val(catB);
-                            $('#catC').val(catC);
-                            $('#catD').val(catD);
+                            $('#catA').val( catA );
+                            $('#catB').val( catB );
+                            $('#catC').val( catC );
+                            $('#catD').val( catD );
                             $('#score').val( entry );
                         } else {
-                            alert('Please enter score.')
+                            alert( 'Please enter score.' );
                         }
                     });
 
@@ -171,6 +181,9 @@
                         mediaRecorder.stop();
                         $('#stopwatch').stopwatch().stopwatch('stop');
                         $('#submitModalForm').submit();
+
+                        $('#footer-buttons').addClass('d-none').removeClass('d-block');
+                        $('#progress').removeClass('d-none').addClass('d-block');
                     });
 
                 };
@@ -268,7 +281,7 @@
                                             <div class="row mb-1 align-items-center" >
                                                 <div class="col-md-8">
                                                     <label for="technique" class="display-6">Technique</label>                                                    
-                                                    <input type="range" min="0" max="40" value="0" name="technique" class="w-100 slider form-range mt-2 d-block" id="technique">
+                                                    <input type="range" min="65" max="100" step="0.05" value="65.00" name="technique" class="w-100 slider form-range mt-2 d-block" id="technique">
                                                     
                                                     <div class="btn-group w-100 my-3" role="group">
                                                         <input class="btn btn-info fineTune w-25 d-inline-block" data-function="sub" data-target="technique" type=button value="-">
@@ -276,8 +289,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 text-center">
-                                                    <div id="techNumber" class="display-5 border scorelabel py-2">0</div>
-                                                    <sub class="text-center d-block mt-2">Max Score of 40</sub>
+                                                    <div id="techNumber" class="display-5 border scorelabel py-2">65.00</div>
+                                                    <!-- <sub class="text-center d-block mt-2">Max Score of 40</sub> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -285,7 +298,7 @@
                                             <div class="row mb-1 align-items-center">
                                                 <div class="col-md-8">
                                                     <label for="artistry" class="display-6">Artistry</label>
-                                                    <input type="range" min="0" max="40" value="0" name="artistry" class="w-100 slider form-range mt-2 d-block" id="artistry">
+                                                    <input type="range" min="65" max="100" step="0.05" value="65.00" name="artistry" class="w-100 slider form-range mt-2 d-block" id="artistry">
                                                    
                                                     <div class="btn-group w-100 my-3" role="group">
                                                         <input class="btn btn-info fineTune w-25 d-inline-block" data-function="sub" data-target="artistry" type=button value="-">
@@ -293,8 +306,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 text-center">
-                                                    <div id="artNumber" class="display-5 border scorelabel py-2">0</div>
-                                                    <sub class="text-center d-block mt-2">Max Score of 40</sub>
+                                                    <div id="artNumber" class="display-5 border scorelabel py-2">65.00</div>
+                                                    <!-- <sub class="text-center d-block mt-2">Max Score of 40</sub> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -304,15 +317,15 @@
                                             <div class="row mb-1 align-items-center">
                                                 <div class="col-md-8">
                                                     <label for="musicality" class="display-6">Musicality</label>
-                                                    <input type="range" min="0" max="15" value="0" name="musicality" class="w-100 slider form-range mt-2 d-block" id="musicality">
+                                                    <input type="range" min="65" max="100" step="0.05" value="65.00" name="musicality" class="w-100 slider form-range mt-2 d-block" id="musicality">
                                                     <div class="btn-group w-100 my-3" role="group">
                                                         <input class="btn btn-info fineTune w-25 d-inline-block" data-function="sub" data-target="musicality" type=button value="-">
                                                         <input class="btn btn-primary fineTune w-25 d-inline-block" data-function="add" data-target="musicality" type=button value="+">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 text-center">
-                                                    <div id="musicNumber" class="display-5 border scorelabel py-2">0</div>
-                                                    <sub class="text-center d-block mt-2">Max Score of 15</sub>
+                                                    <div id="musicNumber" class="display-5 border scorelabel py-2">65.00</div>
+                                                    <!-- <sub class="text-center d-block mt-2">Max Score of 15</sub> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -320,15 +333,15 @@
                                             <div class="row mb-1 align-items-center">
                                                 <div class="col-md-8">
                                                     <label for="costume" class="display-6">Costume</label>
-                                                    <input type="range" min="0" max="5" value="0" name="costume" class="w-100 slider form-range mt-2 d-block" id="costume">
+                                                    <input type="range" min="65" max="100" step="0.05" value="65.00" name="costume" class="w-100 slider form-range mt-2 d-block" id="costume">
                                                     <div class="btn-group w-100 my-3" role="group">
                                                         <input class="btn btn-info fineTune w-25 d-inline-block" data-function="sub" data-target="costume" type=button value="-">
                                                         <input class="btn btn-primary fineTune w-25 d-inline-block" data-function="add" data-target="costume" type=button value="+">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 text-center">
-                                                    <div id="costNumber" class="display-5 border scorelabel py-2">0</div>
-                                                    <sub class="text-center d-block mt-2">Max Score of 5</sub>
+                                                    <div id="costNumber" class="display-5 border scorelabel py-2">65.00</div>
+                                                    <!-- <sub class="text-center d-block mt-2">Max Score of 5</sub> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -338,7 +351,7 @@
                                             <label for="totalScore" class="display-4">Total Score</label>
                                         </div>
                                         <div class="col-md-4">
-                                            <input type="text" maxlength="5" name="totalScore" id="totalScore" class="display-2 float-end w-100 text-center" value="0" readonly />
+                                            <input type="text" maxlength="5" name="totalScore" id="totalScore" class="display-2 float-end w-100 text-center" value="65.00" readonly />
                                         </div>
                                     </div>
                                 </form>
@@ -410,9 +423,12 @@
 
         </div>
         <div class="modal-footer">
-            <div class="btn-group">
+            <div id="footer-buttons" class="d-block btn-group">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Change Score</button>
                 <button type="button" id="savescore" class="btn btn-primary">Save Score</button>
+            </div>
+            <div id="progress" class="w-100 d-none text-center">
+             <h4><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="40" height="40"><rect fill="#FF156D" stroke="#FF156D" stroke-width="15" width="30" height="30" x="25" y="85"><animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate></rect><rect fill="#FF156D" stroke="#FF156D" stroke-width="15" width="30" height="30" x="85" y="85"><animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate></rect><rect fill="#FF156D" stroke="#FF156D" stroke-width="15" width="30" height="30" x="145" y="85"><animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate></rect></svg> Saving scores, please wait</h4>
             </div>
         </div>
     </div>

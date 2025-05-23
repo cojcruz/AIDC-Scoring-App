@@ -97,11 +97,11 @@ class ScoringController extends Controller
     {
         // Setup Vars
         $entryCode = $request->input('code');
-        $catA = (int)$request->input('technique');
-        $catB = (int)$request->input('artistry');
-        $catC = (int)$request->input('musicality');
-        $catD = (int)$request->input('costume');
-        $score = (int)$request->input('score');
+        $catA = (float)$request->input('technique');
+        $catB = (float)$request->input('artistry');
+        $catC = (float)$request->input('musicality');
+        $catD = (float)$request->input('costume');
+        $score = (float)$request->input('score');
         $judge_id = (int)$request->input('judge');
         $category = $request->input('category');
         
