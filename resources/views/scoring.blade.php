@@ -290,7 +290,7 @@
                                                 </div>
                                                 <div class="col-md-4 text-center">
                                                     <div id="techNumber" class="display-5 border scorelabel py-2">65.00</div>
-                                                    <!-- <sub class="text-center d-block mt-2">Max Score of 40</sub> -->
+                                                    <sub class="text-center d-block mt-2 fs-5">Score Weight 40%</sub>
                                                 </div>
                                             </div>
                                         </div>
@@ -307,7 +307,7 @@
                                                 </div>
                                                 <div class="col-md-4 text-center">
                                                     <div id="artNumber" class="display-5 border scorelabel py-2">65.00</div>
-                                                    <!-- <sub class="text-center d-block mt-2">Max Score of 40</sub> -->
+                                                    <sub class="text-center d-block mt-2 fs-5">Score Weight 40%</sub>
                                                 </div>
                                             </div>
                                         </div>
@@ -325,7 +325,7 @@
                                                 </div>
                                                 <div class="col-md-4 text-center">
                                                     <div id="musicNumber" class="display-5 border scorelabel py-2">65.00</div>
-                                                    <!-- <sub class="text-center d-block mt-2">Max Score of 15</sub> -->
+                                                    <sub class="text-center d-block mt-2 fs-5">Score Weight 15%</sub>
                                                 </div>
                                             </div>
                                         </div>
@@ -341,7 +341,7 @@
                                                 </div>
                                                 <div class="col-md-4 text-center">
                                                     <div id="costNumber" class="display-5 border scorelabel py-2">65.00</div>
-                                                    <!-- <sub class="text-center d-block mt-2">Max Score of 5</sub> -->
+                                                    <sub class="text-center d-block mt-2 fs-5">Score Weight 5%</sub>
                                                 </div>
                                             </div>
                                         </div>
