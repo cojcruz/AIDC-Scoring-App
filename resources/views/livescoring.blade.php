@@ -30,6 +30,23 @@
                     }
                 });
             }, 250);
+
+            setInterval( function() {
+                $.ajax({
+                    type    : "POST",
+                    url     : '{{ route('livescoring.checkMatch') }}',
+                    data    : {
+                        _token  : '{{ csrf_token() }}',
+                        code    : '{{ $code }}',                                
+                    },
+                    success     : function(response) {
+                        console.log('Active Match');
+                    },
+                    error       : function(response) {
+                        window.location.reload();
+                    }
+                });
+            }, 250);
         })
     });
 </script>
@@ -86,6 +103,23 @@
                             }
 
                             checkActive();
+
+                            setInterval( function() {
+                                $.ajax({
+                                    type    : "POST",
+                                    url     : '{{ route('livescoring.checkMatch') }}',
+                                    data    : {
+                                        _token  : '{{ csrf_token() }}',
+                                        code    : '{{ $code }}',                                
+                                    },
+                                    success     : function(response) {
+                                        console.log('Active Match');
+                                    },
+                                    error       : function(response) {
+                                        window.location.reload();
+                                    }
+                                });
+                            }, 250);
 
                             $('body').addClass('showBg');
                         });
@@ -172,11 +206,7 @@
                         $judges = array($judge_a, $judge_b, $judge_c);
 
                         shuffle($judges);
-                        $i = 1;
                     
-                    @endphp
-                    @php
-
                         $average = round( ( (float)$entry->judge_a + (float)$entry->judge_b + (float)$entry->judge_c) / 3, 2); // Compute for Average Score
                         
                     @endphp
