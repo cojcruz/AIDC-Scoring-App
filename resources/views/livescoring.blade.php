@@ -29,7 +29,24 @@
                         console.log('no scores entered yet.');
                     }
                 });
-            }, 500);
+            }, 250);
+
+            setInterval( function() {
+                $.ajax({
+                    type    : "POST",
+                    url     : '{{ route('livescoring.checkMatch') }}',
+                    data    : {
+                        _token  : '{{ csrf_token() }}',
+                        code    : '{{ $code }}',                                
+                    },
+                    success     : function(response) {
+                        console.log('Active Match');
+                    },
+                    error       : function(response) {
+                        window.location.reload();
+                    }
+                });
+            }, 250);
         })
     });
 </script>
@@ -87,6 +104,23 @@
 
                             checkActive();
 
+                            setInterval( function() {
+                                $.ajax({
+                                    type    : "POST",
+                                    url     : '{{ route('livescoring.checkMatch') }}',
+                                    data    : {
+                                        _token  : '{{ csrf_token() }}',
+                                        code    : '{{ $code }}',                                
+                                    },
+                                    success     : function(response) {
+                                        console.log('Active Match');
+                                    },
+                                    error       : function(response) {
+                                        window.location.reload();
+                                    }
+                                });
+                            }, 250);
+
                             $('body').addClass('showBg');
                         });
                     });
@@ -110,27 +144,49 @@
         <script>
             jQuery( function($) {
                 $(document).ready(function(){
+                    // setInterval( function() {
+                    //     $.ajax({
+                    //         type    : "POST",
+                    //         url     : '{{ route('livescoring.checkActive') }}',
+                    //         data    : { 
+                    //             _token  : '{{ csrf_token() }}', 
+                    //             code    : '{{ $code }}',
+                    //             scores  : true
+                    //         },
+                    //         success : function(response) {
+                    //             window.location.reload();                    
+                    //         },
+                    //         error   : function(response) {
+                    //             console.log('no scores entered yet.');
+                    //         }
+                    //     });
+                    // }, 250);
+
                     setInterval( function() {
                         $.ajax({
                             type    : "POST",
-                            url     : '{{ route('livescoring.checkActive') }}',
-                            data    : { 
-                                _token  : '{{ csrf_token() }}', 
-                                code    : '{{ $code }}',
-                                scores  : true
+                            url     : '{{ route('livescoring.checkMatch') }}',
+                            data    : {
+                                _token  : '{{ csrf_token() }}',
+                                code    : '{{ $code }}',                                
                             },
-                            success : function(response) {
-                                window.location.reload();                    
+                            success     : function(response) {
+                                console.log('Active Match');
                             },
-                            error   : function(response) {
-                                console.log('no scores entered yet.');
+                            error       : function(response) {
+                                window.location.reload();
                             }
                         });
-                    }, 500);
+                    }, 250);
+
+                    setInterval( function() {
+                        $('#scoreContainer').hide();
+                        $('body').addClass('showBg');
+                    }, 5000);
                 })
             });
         </script>
-        <div class="col-md-12 my-auto w-100">
+        <div id="scoreContainer" class="col-md-12 my-auto w-100">
             <div class="card h-100 rounded shadow-lg">
                 <div class="card-header bg-light">
                     <div class="row">
@@ -146,14 +202,13 @@
                 </div>
                 <div id="livescores" class="card-body p-0 border-0">
                     @php
+                    
                         $judges = array($judge_a, $judge_b, $judge_c);
 
                         shuffle($judges);
-                        $i = 1;
-                    @endphp
-                    @php
-                        $average = round( ( (int)$entry->judge_a + (int)$entry->judge_b + (int)$entry->judge_c) / 3, 2); // Compute for Average Score
-                        $average <= 65 ? $average = 65 : $average;
+                    
+                        $average = round( ( (float)$entry->judge_a + (float)$entry->judge_b + (float)$entry->judge_c) / 3, 2); // Compute for Average Score
+                        
                     @endphp
                     <div class="card-footer border text-bg-primary">
                         <h4 class="fw-bold text-center display-5">Average</h4>
@@ -164,7 +219,7 @@
                         <div class="card text-center border border-black">
 
                             <div class="card-body py-5">
-                                <h2 class="score display-3">{{ (int)$judge <= 65 ? 65 : $judge }}</h2>
+                                <h2 class="score display-3">{{ (float)$judge <= 65 ? 65 : $judge }}</h2>
                             </div>
 
                             <h5 class="card-title bg-primary display-6 text-white py-0 my-0">Judge</h5>

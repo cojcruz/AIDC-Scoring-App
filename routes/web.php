@@ -57,6 +57,8 @@ Route::get('/dashboard/livescoring', 'LiveScoringController@index')->name('lives
 
 Route::post('/dashboard/livescoring/check', 'LiveScoringController@checkActive')->name('livescoring.checkActive');
 
+Route::post('/dashboard/livescoring/match', 'LiveScoringController@checkMatch')->name('livescoring.checkMatch');
+
 Route::get('/dashboard/ranking', 'RankingController@index')->name('ranking');
 
 Route::get('/dashboard/ranking/results', 'RankingController@index')->name('ranking.form'); 

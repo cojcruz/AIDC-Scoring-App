@@ -224,7 +224,7 @@
                             }, 
                             dataType: 'json'
                         })
-                    }, 2000);
+                    }, 250);
                 }
 
                 checkActive();

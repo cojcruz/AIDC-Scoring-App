@@ -99,4 +99,23 @@ class LiveScoringController extends Controller
             ], 400);
         }
     }
+
+    public function checkMatch( Request $request ) {
+        $activeEntry = DB::table( 'active_entry' )
+            ->select('*')->first();
+
+        if ( isset( $activeEntry->code ) )  {
+
+            if ( $activeEntry->code == $request->input('code') ) {
+                return Response::json([
+                    'success' => true
+                ], 200);
+            } else {
+                return Response::json([
+                    'success' => false
+                ], 400);
+            }
+
+        }
+    }
 }
