@@ -37,6 +37,29 @@ class AdminController extends Controller
     }
 
     /**
+     * Get all entries with scores for API
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllEntries()
+    {
+        $entries = DB::table('entries')
+            ->select('*')
+            ->orderBy('id')
+            ->get();
+
+        $activeEntry = DB::table('active_entry')
+            ->select('code')
+            ->where('id', 1)
+            ->first();
+
+        return response()->json([
+            'entries' => $entries,
+            'activeEntry' => $activeEntry,
+        ]);
+    }
+
+    /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
