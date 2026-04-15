@@ -17,9 +17,7 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/categories_app.js', 'public/js')
     .js('resources/js/live_app.js', 'public/js')
     .js('resources/js/scoring_app.js','public/js')
-    .js('resources/js/judgescoring_app.js','public/js');
- module.exports = {
-    resolve: {
-        extensions: ['*', '.js', '.vue', '.json']
-    }
- }
+    .js('resources/js/judgescoring_app.js','public/js')
+    .vue()
+    .js('resources/js/admin_react_app.jsx', 'public/js')
+    .react();

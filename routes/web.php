@@ -53,6 +53,8 @@ Route::get('/dashboard/admin/clear/{id}', 'AdminController@deactivateEntry')->na
 
 Route::get('/dashboard/admin/getactive', 'AdminController@getActive')->name('get.active');
 
+Route::get('/api/admin/entries', 'AdminController@getAllEntries')->name('admin.api.entries');
+
 Route::get('/dashboard/livescoring', 'LiveScoringController@index')->name('livescoring');
 
 Route::post('/dashboard/livescoring/check', 'LiveScoringController@checkActive')->name('livescoring.checkActive');
