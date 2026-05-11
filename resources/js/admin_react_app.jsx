@@ -2,6 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import axios from 'axios';
 
+// Slide-down Notification Component
+const SlideDownNotification = ({ message, type, onClose, isVisible }) => {
+    useEffect(() => {
+        if (isVisible) {
+            const timer = setTimeout(() => {
+                onClose();
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [isVisible, onClose]);
+
+    if (!isVisible) return null;
+
+    const bgColor = type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-info';
+
+    return (
+        <div
+            className={`position-fixed top-0 start-0 end-0 ${bgColor} text-white py-3 px-4 shadow-lg`}
+            style={{
+                zIndex: 9999,
+                transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+                transition: 'transform 0.3s ease-in-out',
+            }}
+        >
+            <div className="container-fluid d-flex justify-content-between align-items-center">
+                <span className="fw-bold">{message}</span>
+                <button
+                    onClick={onClose}
+                    className="btn btn-sm btn-outline-light border-0"
+                    style={{ fontSize: '1.2rem', lineHeight: 1 }}
+                >
+                    &times;
+                </button>
+            </div>
+        </div>
+    );
+};
+
 const AdminDashboard = () => {
     const [entries, setEntries] = useState([]);
     const [activeEntry, setActiveEntry] = useState(null);
@@ -9,6 +47,7 @@ const AdminDashboard = () => {
     const [searchCode, setSearchCode] = useState('');
     const [foundEntry, setFoundEntry] = useState(null);
     const [csrfToken, setCsrfToken] = useState('');
+    const [notification, setNotification] = useState({ message: '', type: 'success', isVisible: false });
 
     useEffect(() => {
         // Get CSRF token from meta tag
@@ -24,6 +63,14 @@ const AdminDashboard = () => {
         fetchEntries();
     }, []);
 
+    const showNotification = (message, type = 'success') => {
+        setNotification({ message, type, isVisible: true });
+    };
+
+    const hideNotification = () => {
+        setNotification(prev => ({ ...prev, isVisible: false }));
+    };
+
     const fetchEntries = async () => {
         try {
             const response = await axios.get('/api/admin/entries');
@@ -32,18 +79,24 @@ const AdminDashboard = () => {
             setLoading(false);
         } catch (error) {
             console.error('Error fetching entries:', error);
+            showNotification('Error loading entries', 'error');
             setLoading(false);
         }
     };
+
+    // Filter entries: if active entry exists, only show same category entries
+    const filteredEntries = activeEntry && activeEntry.category
+        ? entries.filter(e => e.category === activeEntry.category)
+        : entries;
 
     const handleActivate = async (code) => {
         try {
             await axios.get(`/dashboard/admin/activate/${code}`);
             await fetchEntries();
-            alert(`Entry ${code} Activated!`);
+            showNotification(`Entry ${code} Activated!`, 'success');
         } catch (error) {
             console.error('Error activating entry:', error);
-            alert('Failed to activate entry');
+            showNotification('Failed to activate entry', 'error');
         }
     };
 
@@ -51,10 +104,10 @@ const AdminDashboard = () => {
         try {
             await axios.get(`/dashboard/admin/clear/${code}`);
             await fetchEntries();
-            alert(`Entry ${code} Deactivated!`);
+            showNotification(`Entry ${code} Deactivated!`, 'success');
         } catch (error) {
             console.error('Error deactivating entry:', error);
-            alert('Failed to deactivate entry');
+            showNotification('Failed to deactivate entry', 'error');
         }
     };
 
@@ -62,10 +115,10 @@ const AdminDashboard = () => {
         try {
             await axios.post('/dashboard/admin/clear', { _token: csrfToken });
             await fetchEntries();
-            alert('Active Cleared!');
+            showNotification('Active entry cleared!', 'success');
         } catch (error) {
             console.error('Error clearing active entry:', error);
-            alert('Failed to clear active entry');
+            showNotification('Failed to clear active entry', 'error');
         }
     };
 
@@ -73,15 +126,16 @@ const AdminDashboard = () => {
         const entry = entries.find(e => e.code.toLowerCase() === searchCode.toLowerCase());
         if (entry) {
             setFoundEntry(entry);
+            showNotification(`Found: ${entry.code} - ${entry.entry_name}`, 'success');
         } else {
             setFoundEntry(null);
-            alert('Entry not found');
+            showNotification('Entry not found', 'error');
         }
     };
 
     const handleSetActive = async () => {
         if (!searchCode) {
-            alert('Please enter a participant number');
+            showNotification('Please enter a participant number', 'error');
             return;
         }
         try {
@@ -91,10 +145,10 @@ const AdminDashboard = () => {
             });
             await fetchEntries();
             setSearchCode('');
-            alert('Entry Activated!');
+            showNotification('Entry Activated!', 'success');
         } catch (error) {
             console.error('Error activating entry:', error);
-            alert('Failed to activate entry');
+            showNotification('Failed to activate entry', 'error');
         }
     };
 
@@ -104,6 +158,12 @@ const AdminDashboard = () => {
 
     return (
         <div className="admin-dashboard">
+            <SlideDownNotification
+                message={notification.message}
+                type={notification.type}
+                isVisible={notification.isVisible}
+                onClose={hideNotification}
+            />
             {/* Control Panel */}
             <div className="row justify-content-center mb-4">
                 <div className="col-md-4">
@@ -200,8 +260,23 @@ const AdminDashboard = () => {
             {/* Entries Table */}
             <div className="card">
                 <div className="card-header d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">All Entries</h5>
-                    <span className="badge bg-primary">{entries.length} entries</span>
+                    <div>
+                        <h5 className="mb-0">
+                            {activeEntry && activeEntry.category ? (
+                                <>
+                                    Entries - <span className="text-info">{activeEntry.category}</span> Category
+                                </>
+                            ) : (
+                                'All Entries'
+                            )}
+                        </h5>
+                        {activeEntry && activeEntry.category && (
+                            <small className="text-muted">
+                                Showing entries with same category as active entry ({activeEntry.code})
+                            </small>
+                        )}
+                    </div>
+                    <span className="badge bg-primary">{filteredEntries.length} entries</span>
                 </div>
                 <div className="card-body p-0">
                     <div className="table-responsive" style={{ maxHeight: '500px', overflow: 'auto' }}>
@@ -219,7 +294,7 @@ const AdminDashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {entries.map((entry) => (
+                                {filteredEntries.map((entry) => (
                                     <tr key={entry.id}>
                                         <td>
                                             {activeEntry?.code === entry.code ? (

@@ -83,6 +83,57 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        /* Sidebar collapse styles */
+        #sidebar {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        #sidebar.collapsed {
+            flex: 0 0 0;
+            max-width: 0;
+            padding: 0;
+            opacity: 0;
+        }
+        #sidebar:not(.collapsed) {
+            flex: 0 0 16.666667%;
+            max-width: 16.666667%;
+        }
+        #main {
+            transition: all 0.3s ease;
+        }
+        #main.expanded {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        #main:not(.expanded) {
+            flex: 0 0 83.333333%;
+            max-width: 83.333333%;
+        }
+        #sidebar-toggle {
+            position: fixed;
+            left: 10px;
+            bottom: 20px;
+            z-index: 1000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #sidebar-toggle.collapsed {
+            left: 10px;
+        }
+        #sidebar-toggle .material-icons {
+            font-size: 20px;
+        }
+        #sidebar .nav-link {
+            white-space: nowrap;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -167,6 +218,41 @@
                 </div>
             </div>
         </main>
+
+        <!-- Sidebar Toggle Button -->
+        <button id="sidebar-toggle" class="btn btn-primary" title="Toggle Sidebar">
+            <i class="material-icons">chevron_left</i>
+        </button>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const sidebar = document.getElementById('sidebar');
+                const main = document.getElementById('main');
+                const toggleBtn = document.getElementById('sidebar-toggle');
+                const toggleIcon = toggleBtn.querySelector('.material-icons');
+                
+                // Check localStorage for saved state
+                const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (isCollapsed) {
+                    sidebar.classList.add('collapsed');
+                    main.classList.add('expanded');
+                    toggleBtn.classList.add('collapsed');
+                    toggleIcon.textContent = 'chevron_right';
+                }
+                
+                toggleBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    main.classList.toggle('expanded');
+                    toggleBtn.classList.toggle('collapsed');
+                    
+                    const isNowCollapsed = sidebar.classList.contains('collapsed');
+                    toggleIcon.textContent = isNowCollapsed ? 'chevron_right' : 'chevron_left';
+                    
+                    // Save state to localStorage
+                    localStorage.setItem('sidebarCollapsed', isNowCollapsed);
+                });
+            });
+        </script>
     </div>
 </body>
 </html>
