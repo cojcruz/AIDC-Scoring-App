@@ -48,10 +48,19 @@ class AdminController extends Controller
             ->orderBy('id')
             ->get();
 
-        $activeEntry = DB::table('active_entry')
+        $activeEntryCode = DB::table('active_entry')
             ->select('code')
             ->where('id', 1)
             ->first();
+
+        // Get the full details of the active entry including its category
+        $activeEntry = null;
+        if ($activeEntryCode && $activeEntryCode->code) {
+            $activeEntry = DB::table('entries')
+                ->select('code', 'category')
+                ->where('code', $activeEntryCode->code)
+                ->first();
+        }
 
         return response()->json([
             'entries' => $entries,
