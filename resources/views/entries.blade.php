@@ -2,6 +2,7 @@
 
 @section('appScript')
 <link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
+<script src="{{ asset('js/app.js') }}" defer></script>
 <script src="{{ asset('js/categories_app.js') }}" defer></script>
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 <script src="{{ asset('js/datatables.min.js') }}"></script>

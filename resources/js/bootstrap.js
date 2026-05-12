@@ -7,11 +7,13 @@ window._ = require('lodash');
  */
 
 try {
-    window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
 
+    // Bootstrap 5 uses @popperjs/core instead of popper.js
     require('bootstrap');
-} catch (e) {}
+} catch (e) {
+    console.error('Bootstrap loading error:', e);
+}
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
