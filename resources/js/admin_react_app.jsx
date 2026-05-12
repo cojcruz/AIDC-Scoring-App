@@ -164,101 +164,9 @@ const AdminDashboard = () => {
                 isVisible={notification.isVisible}
                 onClose={hideNotification}
             />
-            {/* Control Panel */}
-            <div className="row justify-content-center mb-4">
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-header">Find Entry</div>
-                        <div className="card-body">
-                            <input
-                                type="text"
-                                className="form-control mb-2"
-                                placeholder="Enter code"
-                                value={searchCode}
-                                onChange={(e) => setSearchCode(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleFindEntry()}
-                            />
-                            <button className="btn btn-primary w-100" onClick={handleFindEntry}>
-                                Find
-                            </button>
-                            {foundEntry && (
-                                <div className="mt-2 p-2 bg-light rounded">
-                                    <strong>{foundEntry.code}</strong> - {foundEntry.entry_name}
-                                    <br />
-                                    <small>{foundEntry.entry_school} | {foundEntry.category}</small>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-header">Set Active Entry</div>
-                        <div className="card-body">
-                            <input
-                                type="text"
-                                className="form-control mb-2"
-                                placeholder="Enter Participant Number"
-                                value={searchCode}
-                                onChange={(e) => setSearchCode(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleSetActive()}
-                            />
-                            <button className="btn btn-primary w-100" onClick={handleSetActive}>
-                                Submit
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            {/* Active Entry Status */}
-            <div className="row justify-content-center mb-4">
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-header">Clear Active Entry</div>
-                        <div className="card-body text-center">
-                            <button className="btn btn-warning" onClick={handleClearActive}>
-                                Clear
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-header">Current Active Entry</div>
-                        <div className="card-body text-center">
-                            <input
-                                type="text"
-                                className="form-control text-center"
-                                readOnly
-                                value={activeEntry?.code || 'No Active Entry'}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Live Scoring and Ranking Links */}
-            <div className="row justify-content-center mb-4">
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-header">Live Scoring Page</div>
-                        <div className="card-body text-center">
-                            <a
-                                href="/dashboard/livescoring"
-                                className="btn btn-primary"
-                                target="LiveScoring"
-                                rel="noopener noreferrer"
-                            >
-                                Launch
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Entries Table */}
-            <div className="card">
+            {/* Entries Table - Moved to Top */}
+            <div className="card mb-4">
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <div>
                         <h5 className="mb-0">
@@ -347,6 +255,91 @@ const AdminDashboard = () => {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            {/* Control Panel - 5 Column Grid at Bottom */}
+            <div className="row g-3">
+                <div className="col">
+                    <div className="card h-100">
+                        <div className="card-header">Find Entry</div>
+                        <div className="card-body">
+                            <input
+                                type="text"
+                                className="form-control mb-2"
+                                placeholder="Enter code"
+                                value={searchCode}
+                                onChange={(e) => setSearchCode(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleFindEntry()}
+                            />
+                            <button className="btn btn-primary w-100" onClick={handleFindEntry}>
+                                Find
+                            </button>
+                            {foundEntry && (
+                                <div className="mt-2 p-2 bg-light rounded">
+                                    <strong>{foundEntry.code}</strong> - {foundEntry.entry_name}
+                                    <br />
+                                    <small>{foundEntry.entry_school} | {foundEntry.category}</small>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className="col">
+                    <div className="card h-100">
+                        <div className="card-header">Set Active Entry</div>
+                        <div className="card-body">
+                            <input
+                                type="text"
+                                className="form-control mb-2"
+                                placeholder="Enter Participant Number"
+                                value={searchCode}
+                                onChange={(e) => setSearchCode(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSetActive()}
+                            />
+                            <button className="btn btn-primary w-100" onClick={handleSetActive}>
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className="col">
+                    <div className="card h-100">
+                        <div className="card-header">Current Active Entry</div>
+                        <div className="card-body text-center d-flex align-items-center justify-content-center">
+                            <input
+                                type="text"
+                                className="form-control text-center"
+                                readOnly
+                                value={activeEntry?.code || 'No Active Entry'}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="col">
+                    <div className="card h-100">
+                        <div className="card-header">Clear Active Entry</div>
+                        <div className="card-body text-center d-flex align-items-center justify-content-center">
+                            <button className="btn btn-warning w-100" onClick={handleClearActive}>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className="col">
+                    <div className="card h-100">
+                        <div className="card-header">Live Scoring Page</div>
+                        <div className="card-body text-center d-flex align-items-center justify-content-center">
+                            <a
+                                href="/dashboard/livescoring"
+                                className="btn btn-primary w-100"
+                                target="LiveScoring"
+                                rel="noopener noreferrer"
+                            >
+                                Launch
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
