@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('appScript')
-<script src="{{ asset('js/admin_react_app.js') }}" defer></script>
+<script src="{{ asset('js/admin_react_app.js') }}?v={{ filemtime(public_path('js/admin_react_app.js')) }}" defer></script>
 @endsection
 
 @section('content')

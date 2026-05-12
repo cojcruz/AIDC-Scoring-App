@@ -91,7 +91,7 @@
         }
         #sidebar.collapsed {
             flex: 0 0 0;
-            max-width: 0;
+            max-width: 0 !important;
             padding: 0;
             opacity: 0;
         }
@@ -178,7 +178,7 @@
 
         <main class="py-4">
             <div class="row">
-                <div id="sidebar" class="col-md-2">
+                <div id="sidebar">
                     <ul class="nav">
                         @auth
                             @if ( Auth::user()->admin )
@@ -213,7 +213,7 @@
                         @endauth
                     </ul>
                 </div>
-                <div id="main" class="col-md-10">
+                <div id="main">
                     @yield('content')
                 </div>
             </div>
