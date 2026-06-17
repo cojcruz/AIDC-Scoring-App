@@ -117,5 +117,9 @@ class LiveScoringController extends Controller
             }
 
         }
+
+        return Response::json([
+            'success' => false
+        ], 400);
     }
 }
