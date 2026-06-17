@@ -1,9 +1,9 @@
 @extends('layouts.scoring')
 
 @section('appScript')
-    <script src="{{ asset('js/judgescoring_app.js') }}"></script>
+    <script src="{{ asset('js/scoring_app.js') }}"></script>
 
-    @if ( $status == 'active' ) 
+    @if ( $status == 'active' )
     <style>
         #app, #app main {
             height: 100vh !important;
@@ -13,15 +13,13 @@
         }
         #app main > .row {
             align-items: center;
-        }
+        }   
         #app main .fineTune {
             font-weight: bold;
         }
     </style>
-    <script src="{{ asset('js/jquery.stopwatch.js') }}"></script>
     <script>
         jQuery( function($) {
-            $(document).ready(function() {
                 let catA = 65;
                 let catB = 65;
                 let catC = 65;
@@ -84,8 +82,6 @@
                 }
 
                 // Checksum if active entry is correct
-                let i = 0;
-                
                 function validateEntry() {
                     $.ajax({
                         type: 'POST',
@@ -95,19 +91,13 @@
                         },
                         url: "{{ route('score.validateEntry') }}",
                         success: function( data ) {
-                            console.log('success');                                
-                            if ( i <= 15 ) {
-                                ++i;
-
-                                setTimeout( validateEntry, 2000 );
-                            } else {
-                                console.log('validation done');
-                            }
-                        }, 
+                            console.log('success');
+                            setTimeout( validateEntry, 2000 );
+                        },
                         error: function() {
                             console.log('failure');
-                            window.location.reload();                                
-                        }, 
+                            window.location.reload();
+                        },
                         dataType: 'json'
                     });
                 }
@@ -116,9 +106,16 @@
 
                 // Voice Recording Script
                 let complete = false;
+                let mediaRecorder = null;
 
                 @if ( !$check )
-                $('#stopwatch').stopwatch().stopwatch('start');
+                // Initialize stopwatch
+                if (typeof $.fn.stopwatch !== 'undefined') {
+                    $('#stopwatch').stopwatch();
+                    $('#stopwatch').stopwatch('start');
+                } else {
+                    console.error('Stopwatch plugin not loaded');
+                }
 
                 $(window).bind('beforeunload', function() {
                     if ( !complete ) {
@@ -126,11 +123,48 @@
                     }
                 });
 
+                // Scoring Input Init - Always attach these handlers
+                let entry;
+
+                $('#submit').click( function() {
+                    if ( Number($('#totalScore').val()) > 65 ) {
+                        entry = $('#totalScore').val();
+                        $('#catA').val( catA );
+                        $('#catB').val( catB );
+                        $('#catC').val( catC );
+                        $('#catD').val( catD );
+                        $('#score').val( entry );
+                        
+                        // Use native Bootstrap 5 Modal
+                        const modalElement = document.getElementById('confirmScore');
+                        if (modalElement) {
+                            const modal = new bootstrap.Modal(modalElement);
+                            modal.show();
+                        }
+                    } else {
+                        alert( 'Please enter score.' );
+                    }
+                });
+
+                $('#savescore').click( function() {
+                    complete = true;
+                    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                        mediaRecorder.stop();
+                    }
+                    if (typeof $.fn.stopwatch !== 'undefined') {
+                        $('#stopwatch').stopwatch('stop');
+                    }
+                    $('#submitModalForm').submit();
+
+                    $('#footer-buttons').addClass('d-none').removeClass('d-block');
+                    $('#progress').removeClass('d-none').addClass('d-block');
+                });
+
                 // Voice Recorder Init
                 const handleSuccess = function(stream) {
                     const options = {mimeType: 'audio/webm;codecs=opus'};
                     const recordedChunks = [];
-                    const mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder = new MediaRecorder(stream);
 
                     mediaRecorder.addEventListener('dataavailable', function(e) {
                         if (e.data.size > 0) recordedChunks.push(e.data);
@@ -138,7 +172,7 @@
 
                     mediaRecorder.addEventListener('stop', function() {
                         let fd = new FormData();
-                        let audio = new Blob(recordedChunks); 
+                        let audio = new Blob(recordedChunks);
                         let oReq = new XMLHttpRequest();
 
                         fd.append('_token', '{{ csrf_token() }}');
@@ -147,89 +181,67 @@
                         fd.append('catCode', '{{ $catcode }}');
                         fd.append('judge', '{{ Auth::user()->id }}');
 
-                        console.log('test')
+                        console.log('Uploading recording...');
 
                         oReq.open('POST', '{{ route('upload.recording') }}', false);
                         oReq.onload = function( oEvent ) {
-                            //
+                            console.log('Recording uploaded');
                         }
 
                         oReq.send(fd);
                     });
 
                     mediaRecorder.start();
-
-                    // Scoring Input Init    
-                    let entry;                    
-
-                    $('#submit').click( function() {
-                        if ( Number($('#totalScore').val()) > 65 ) {
-                            entry = $('#totalScore').val();
-                            $('#confirmScore').modal('show');
-                            $('#catA').val( catA );
-                            $('#catB').val( catB );
-                            $('#catC').val( catC );
-                            $('#catD').val( catD );
-                            $('#score').val( entry );
-                        } else {
-                            alert( 'Please enter score.' );
-                        }
-                    });
-
-                    $('#savescore').click( function() {
-                        complete = true;
-                        mediaRecorder.stop();
-                        $('#stopwatch').stopwatch().stopwatch('stop');
-                        $('#submitModalForm').submit();
-
-                        $('#footer-buttons').addClass('d-none').removeClass('d-block');
-                        $('#progress').removeClass('d-none').addClass('d-block');
-                    });
-
+                    console.log('Recording started');
                 };
-                // Init Mic Recording
-                navigator.mediaDevices.getUserMedia({ 
-                        audio: true, 
-                        video: false 
-                    })
-                    .then(handleSuccess);
+
+                const handleError = function(error) {
+                    console.warn('Microphone access denied or error:', error);
+                    // Silently continue without recording - user can still submit scores
+                };
+
+                // Init Mic Recording - only if getUserMedia is supported
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({
+                            audio: true,
+                            video: false
+                        })
+                        .then(handleSuccess)
+                        .catch(handleError);
+                } else {
+                    console.warn('getUserMedia not supported in this browser');
+                }
                 @endif
-            });
         });
     </script>
 
-    @else 
+    @else
 
     <script>
-        // setInterval(function() {
-        //     window.location.reload();
-        // }, 2000);
-
         jQuery( function($) {
             $(document).ready( function() {
                 function checkActive() {
-                    setInterval( function() {
-                        $.ajax({
-                            type: 'POST',
-                            url: "{{ route('score.checkActive') }}",
-                            data: {
-                                _token : '{{ csrf_token() }}',
-                            },
-                            success: function( data ) {
-                                console.log('success');
-                                window.location.reload();
-                            }, 
-                            error: function() {
-                                console.log('failure');                               
-                            }, 
-                            dataType: 'json'
-                        })
-                    }, 250);
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('score.checkActive') }}",
+                        data: {
+                            _token : '{{ csrf_token() }}',
+                        },
+                        success: function( data ) {
+                            console.log('success');
+                            window.location.reload();
+                        },
+                        error: function() {
+                            console.log('failure');
+                            setTimeout( checkActive, 250 );
+                        },
+                        dataType: 'json'
+                    });
                 }
 
                 checkActive();
             });
-        })
+        });
     </script>
 
     @endif

@@ -116,7 +116,7 @@
                                         console.log('Active Match');
                                     },
                                     error       : function(response) {
-                                        window.location.reload();
+                                        // window.location.reload();
                                     }
                                 });
                             }, 250);

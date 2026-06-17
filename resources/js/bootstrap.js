@@ -10,7 +10,7 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     // Bootstrap 5 uses @popperjs/core instead of popper.js
-    require('bootstrap');
+    window.bootstrap = require('bootstrap');
 } catch (e) {
     console.error('Bootstrap loading error:', e);
 }
