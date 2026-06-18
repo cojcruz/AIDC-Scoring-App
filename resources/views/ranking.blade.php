@@ -1,15 +1,10 @@
 @extends('layouts.app')
 
 @section('appScript')
-<link rel="stylesheet" href="{{ asset('css/dataTables.min.css') }}">
-<script src="{{ asset('js/live_app.js') }}"></script>
-<script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-<script src="{{ asset('js/datatables.min.js') }}"></script>
-<script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
-<script src="{{ asset('js/jszip.min.js') }}"></script>
-<script src="{{ asset('js/pdfmake.min.js') }}"></script>
-<script src="{{ asset('js/vfs_fonts.js') }}"></script>
-<script src="{{ asset('js/buttons.html5.min.js') }}"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<script src="{{ asset('js/ranking_app.js') }}"></script>
 <script>
     jQuery( function($) {
         let date = new Date();
@@ -23,24 +18,35 @@
                 }
             ],
             dom: 'Bfrtip',
-            buttons: [{
-                extend: 'csv',
-                filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
-            },{
-                extend: 'excel',
-                filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
-            },{
-                extend: 'pdf',
-                orientation: 'landscape',
-                filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
-            },{
-                extend: 'print',
-                orientation: 'landscape',
-                filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
-            }]
+            buttons: [
+                {
+                    extend: 'csv',
+                    text: '<i class="bi bi-filetype-csv"></i> CSV',
+                    filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
+                    className: 'btn btn-success'
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="bi bi-file-earmark-excel"></i> Excel',
+                    filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
+                    className: 'btn btn-success'
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="bi bi-file-earmark-pdf"></i> PDF',
+                    orientation: 'landscape',
+                    filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
+                    className: 'btn btn-danger'
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="bi bi-printer"></i> Print/HTML',
+                    orientation: 'landscape',
+                    filename: 'AIDC ' + date.getFullYear() + ' - Ranking for {{ $cat }}',
+                    className: 'btn btn-primary'
+                }
+            ]
         });
-
-        $('.dt-buttons > button').addClass('btn btn-primary');
     });
 </script>
 @endsection

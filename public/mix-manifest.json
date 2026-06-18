@@ -4,6 +4,7 @@
     "/js/categories_app.js": "/js/categories_app.js",
     "/js/live_app.js": "/js/live_app.js",
     "/js/scoring_app.js": "/js/scoring_app.js",
+    "/js/ranking_app.js": "/js/ranking_app.js",
     "/js/judgescoring_app.js": "/js/judgescoring_app.js",
     "/js/admin_react_app.js": "/js/admin_react_app.js",
     "/css/app.css": "/css/app.css"
