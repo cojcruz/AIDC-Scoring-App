@@ -117,11 +117,11 @@
                     console.error('Stopwatch plugin not loaded');
                 }
 
-                $(window).bind('beforeunload', function() {
-                    if ( !complete ) {
-                        return "Leaving would lose existing voice recording.";
-                    }
-                });
+                // $(window).bind('beforeunload', function() {
+                //     if ( !complete ) {
+                //         return "Leaving would lose existing voice recording.";
+                //     }
+                // });
 
                 // Scoring Input Init - Always attach these handlers
                 let entry;
