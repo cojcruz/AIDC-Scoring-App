@@ -137,7 +137,7 @@
                                 @foreach ( $entries as $entry )
 
                                     @php
-                                        $average = round( ( (int)$entry->judge_a + (int)$entry->judge_b + (int)$entry->judge_c) / 3, 2); // Compute for Average Score
+                                        $average = round( ( (float)$entry->judge_a + (float)$entry->judge_b + (float)$entry->judge_c) / 3, 2); // Compute for Average Score
                                     @endphp
                                 
                                 <tr>
